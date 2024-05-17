@@ -11,7 +11,7 @@ const LayoutFooter = () => {
         flexDirection: "column",
         alignItems: "center",
       }}>
-      <div style={{ width: "1100px" }}>
+      <div style={{ maxWidth: "1100px", width: "100%" }}>
         <Flex align="start" justify="space-between">
           <div style={{ maxWidth: "25%" }}>
             <img style={{ marginTop: "28px" }} src="./footer-logo.png" />
@@ -26,9 +26,7 @@ const LayoutFooter = () => {
             </Typography.Title>
           </div>
         </Flex>
-        <div>
-          <Divider style={{ backgroundColor: "#f9f9f9" }} />
-        </div>
+        <Divider style={{ backgroundColor: "#f9f9f9" }} />
         <Flex justify="space-between">
           <div style={{ maxWidth: "50%" }}>
             <Typography.Text style={{ color: "white" }}>

@@ -6,27 +6,30 @@ import AuthProvider from "./hooks/useAuth";
 import { ConfigProvider, Typography } from "antd";
 import { themeConfig } from "./constants/theme";
 import Home from "./components/Home/Home";
+import { App as AtnApp } from "antd";
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <ConfigProvider theme={themeConfig}>
-        <Typography>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" Component={Home} />
-                <Route path="/dentists" element={<>Dentists</>} />
-                <Route path="/book" element={<>Booking</>} />
-              </Route>
-              <Route path="/login" Component={Login} />
-              <Route path="/about" Component={About} />
-              <Route path="/*" element={<>404 Not Found</>} />
-            </Routes>
-          </BrowserRouter>
-        </Typography>
-      </ConfigProvider>
-    </AuthProvider>
+    <AtnApp>
+      <AuthProvider>
+        <ConfigProvider theme={themeConfig}>
+          <Typography>
+            <BrowserRouter>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" Component={Home} />
+                  <Route path="/dentists" element={<>Dentists</>} />
+                  <Route path="/book" element={<>Booking</>} />
+                </Route>
+                <Route path="/login" Component={Login} />
+                <Route path="/about" Component={About} />
+                <Route path="/*" element={<>404 Not Found</>} />
+              </Routes>
+            </BrowserRouter>
+          </Typography>
+        </ConfigProvider>
+      </AuthProvider>
+    </AtnApp>
   );
 };
 
