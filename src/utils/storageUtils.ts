@@ -20,4 +20,10 @@ export class LocalStorage {
       return null;
     }
   };
+
+  static clear = (key: string) => {
+    window.localStorage.removeItem(key);
+  };
+
+  static clearAll = () => window.localStorage.clear();
 }

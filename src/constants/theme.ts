@@ -1,3 +1,5 @@
+import { Layout } from "antd";
+
 export const themeConfig = {
   token: {
     colorTextBase: "#2a2a2a",
@@ -9,6 +11,9 @@ export const themeConfig = {
     fontSize: 16,
   },
   components: {
+    Layout: {
+      bodyBg: "#ffffff",
+    },
     Button: {
       paddingInline: 20,
       controlHeight: 40,
@@ -25,6 +30,7 @@ export const themeConfig = {
     Menu: {
       algorithm: true,
       iconSize: 16,
+      itemBg: "#ffffff",
       itemMarginInline: 16,
       itemMarginBlock: 8,
       itemBorderRadius: 8,

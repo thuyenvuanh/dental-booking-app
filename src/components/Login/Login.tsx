@@ -2,7 +2,7 @@ import { Flex, Tabs } from "antd";
 import { FullHeightDiv } from "./Login.style";
 import { useEffect, useState } from "react";
 import LoginForm from "../LoginForm/LoginForm";
-import RegisterForm from "../RegisterForm";
+import RegisterForm from "../RegisterForm/RegisterForm";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { isNil } from "lodash";

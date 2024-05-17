@@ -18,6 +18,7 @@ interface AuthDetails {
 interface AuthContextInterface {
   authDetails: AuthDetails | null;
   login: (user: LoginFormProps) => User;
+  logout: () => void;
   isAuthenticated: () => boolean;
 }
 
@@ -41,16 +42,23 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     (user: LoginFormProps) => {
       const loggedInUser = loginApi(user);
       setAuthDetails({ userDetails: loggedInUser });
-      LocalStorage.set("authDetails", loggedInUser);
+      LocalStorage.set("authDetails", {
+        userDetails: loggedInUser,
+      } as AuthDetails);
       return loggedInUser;
     },
     [setAuthDetails, loginApi]
   );
 
+  const logout = useCallback(() => {
+    setAuthDetails(null);
+    LocalStorage.clear("authDetails");
+  }, [setAuthDetails]);
+
   const isAuthenticated = useCallback(() => !isNil(authDetails), [authDetails]);
 
   return (
-    <AuthContext.Provider value={{ authDetails, login, isAuthenticated }}>
+    <AuthContext.Provider value={{ authDetails, login, isAuthenticated, logout }}>
       {children}
     </AuthContext.Provider>
   );
