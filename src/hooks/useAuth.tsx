@@ -29,7 +29,7 @@ interface AuthProviderProps {
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [authDetails, setAuthDetails] = useState<AuthDetails | null>(null);
+  const [authDetails, setAuthDetails] = useState<AuthDetails | null>(LocalStorage.get<AuthDetails>('authDetails'));
 
   useEffect(() => {
     const loggedInUser = LocalStorage.get<AuthDetails>("authDetails");

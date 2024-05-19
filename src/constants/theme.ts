@@ -1,9 +1,8 @@
-import { Layout } from "antd";
-
 export const themeConfig = {
   token: {
     colorTextBase: "#2a2a2a",
     colorBgBase: "#f9f9f9",
+    colorBgContainer: "#ffffff",
     borderRadius: 12,
     wireframe: true,
     colorPrimary: "#2e37a4",
@@ -12,7 +11,7 @@ export const themeConfig = {
   },
   components: {
     Layout: {
-      bodyBg: "#ffffff",
+      bodyBg: "#f5f5f5",
     },
     Button: {
       paddingInline: 20,
@@ -25,7 +24,7 @@ export const themeConfig = {
       borderRadiusSM: 4,
     },
     Typography: {
-      fontFamilyCode: '"Geologica", sans-serif',
+      fontFamilyCode: "'Geologica', sans-serif",
     },
     Menu: {
       algorithm: true,

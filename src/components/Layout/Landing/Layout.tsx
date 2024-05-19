@@ -1,11 +1,12 @@
-import { Layout as AntLayout, Menu, Button, Space, Avatar, Flex } from "antd";
+import { Layout as AntLayout, Menu, Button, Space } from "antd";
 import { Header, Content } from "antd/es/layout/layout";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 import LayoutFooter from "./FooterLayout";
-import UserAvatar from "../UserAvatar/UserAvatar";
+import UserAvatar from "../../UserAvatar/UserAvatar";
+import AuthButtons from "../AuthButton/AuthButtons";
 
-const Layout: React.FC = () => {
+const LandingLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -55,19 +56,7 @@ const Layout: React.FC = () => {
           }}
           items={items}
         />
-        {!isAuthenticated() && (
-          <Space className="auth">
-            <Button>
-              <Link to={"/login"}>Login</Link>
-            </Button>
-            <Button type="primary">
-              <Link to={"/login?register=true"} style={{ color: "white" }}>
-                Register
-              </Link>
-            </Button>
-          </Space>
-        )}
-        {isAuthenticated() && <UserAvatar />}
+        {isAuthenticated() ? <UserAvatar /> : <AuthButtons />}
       </Header>
       <Content style={{ width: "100%", overflow: "visible" }}>
         <Outlet />
@@ -77,4 +66,4 @@ const Layout: React.FC = () => {
   );
 };
 
-export default Layout;
+export default LandingLayout;

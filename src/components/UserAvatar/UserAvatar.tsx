@@ -2,6 +2,7 @@ import { CalendarOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Avatar, Dropdown, MenuProps } from "antd";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import routes from "../../constants/routes";
 
 const UserAvatar = () => {
   const { logout } = useAuth();
@@ -14,7 +15,7 @@ const UserAvatar = () => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <Link to="/appointment">View Appointments</Link>,
+      label: <Link to={routes.USER.HOME}>View Appointments</Link>,
       icon: <CalendarOutlined />,
     },
     {
