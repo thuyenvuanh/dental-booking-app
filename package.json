@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "http://localhost:5173/dental-booking-app",
+  "homepage": "https://thuyenvuanh.github.io/dental-booking-app",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
