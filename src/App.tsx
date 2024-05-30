@@ -7,14 +7,13 @@ import {themeConfig} from "./constants/theme";
 import Home from "./components/Home/Home";
 import UserLayout from "./components/Layout/UserLayout/UserLayout";
 import AppointmentView from "./components/Appointment/View";
-import {BASENAME} from "./constants/routes.ts";
 
 const App: React.FC = () => {
     return (
         <AntApp>
             <AuthProvider>
                 <ConfigProvider theme={themeConfig}>
-                    <HashRouter basename={BASENAME}>
+                    <HashRouter>
                         <Routes>
                             <Route path="/login" Component={Login}/>
                             <Route element={<LandingLayout/>}>
