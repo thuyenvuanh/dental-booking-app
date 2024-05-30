@@ -12,4 +12,6 @@ const routes = {
   },
 };
 
+export const BASENAME = "/dental-booking-app";
+
 export default routes;

@@ -1,6 +1,7 @@
 import { Divider, Flex, Space, Typography } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import { Link } from "react-router-dom";
+import {BASENAME} from "../../../constants/routes.ts";
 
 const LayoutFooter = () => {
   return (
@@ -14,7 +15,7 @@ const LayoutFooter = () => {
       <div style={{ maxWidth: "1100px", width: "100%" }}>
         <Flex align="start" justify="space-between">
           <div style={{ maxWidth: "25%" }}>
-            <img style={{ marginTop: "28px" }} src="./footer-logo.png" />
+            <img style={{ marginTop: "28px" }} src={`.${BASENAME}/footer-logo.png`} />
             <Typography style={{ color: "white" }}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.

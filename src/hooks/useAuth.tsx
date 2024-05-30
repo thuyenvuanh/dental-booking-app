@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User } from "../utils/type";
+import { User } from "../type.ts";
 import { LoginFormProps } from "../components/LoginForm/LoginForm";
 import { loginApi } from "../services/auth";
 import { isNil, isNull } from "lodash";

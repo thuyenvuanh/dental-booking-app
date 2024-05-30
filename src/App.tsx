@@ -8,13 +8,14 @@ import Home from "./components/Home/Home";
 import { App as AntApp } from "antd";
 import UserLayout from "./components/Layout/UserLayout/UserLayout";
 import AppointmentView from "./components/Appointment/View";
+import {BASENAME} from "./constants/routes.ts";
 
 const App: React.FC = () => {
   return (
     <AntApp>
       <AuthProvider>
         <ConfigProvider theme={themeConfig}>
-          <BrowserRouter>
+          <BrowserRouter basename={BASENAME}>
             <Routes>
               <Route path="/login" Component={Login} />
               <Route element={<LandingLayout />}>
@@ -25,7 +26,7 @@ const App: React.FC = () => {
               <Route Component={UserLayout}>
                 <Route path="/apmt" Component={AppointmentView} />
               </Route>
-              <Route path="/*" element={<>404 Not Found</>} />
+              <Route path="*" element={<>404 Not Found</>} />
             </Routes>
           </BrowserRouter>
         </ConfigProvider>

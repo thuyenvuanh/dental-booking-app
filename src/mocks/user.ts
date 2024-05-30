@@ -1,4 +1,4 @@
-import { User } from "../utils/type";
+import { User } from "../type.ts";
 
 export const mockUser: User = {
   email: "test@gmail.com",

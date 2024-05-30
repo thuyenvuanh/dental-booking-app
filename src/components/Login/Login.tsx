@@ -11,7 +11,8 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { isEmpty, isNil } from "lodash";
-import { AuthStateLocation } from "../../utils/type";
+import { AuthStateLocation } from "../../type.ts";
+import {BASENAME} from "../../constants/routes.ts";
 
 const Login: React.FC = () => {
   const [searchParams, _] = useSearchParams();
@@ -46,7 +47,7 @@ const Login: React.FC = () => {
       <FullHeightDiv>
         <Flex align="center" vertical style={{ padding: "200px 0" }}>
           <Link to={"/"}>
-            <img src="./logo.svg" width={300} />
+            <img src={`.${BASENAME}/logo.svg`} width={300} />
           </Link>
           <div style={{ width: "400px" }}>
             <Tabs

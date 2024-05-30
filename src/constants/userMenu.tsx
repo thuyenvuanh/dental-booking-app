@@ -1,5 +1,5 @@
 import { SettingOutlined, CalendarOutlined } from "@ant-design/icons";
-import { MenuItem } from "../utils/type";
+import { MenuItem } from "../type.ts";
 
 export const items: MenuItem[] = [
   {

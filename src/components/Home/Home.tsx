@@ -6,6 +6,7 @@ import {
   EllipsisOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import {BASENAME} from "../../constants/routes.ts";
 
 const Home: React.FC = () => {
   const handleSearch = (value: string) => {
@@ -22,7 +23,7 @@ const Home: React.FC = () => {
           overflow: "hidden",
         }}>
         <img
-          src="./banner-bg.png"
+          src={`.${BASENAME}/banner-bg.png`}
           style={{
             position: "absolute",
             left: "50%",
@@ -83,7 +84,7 @@ const Home: React.FC = () => {
               alert("visit a doctor");
             }}
             style={{ width: 300 }}
-            cover={<img alt="Visit a doctor" src="./feature-1.jpg" />}>
+            cover={<img alt="Visit a doctor" src={`.${BASENAME}/feature-1.jpg`} />}>
             <Meta title="Visit a doctor" description="Book Now" />
           </Card>
           <Card
@@ -92,7 +93,7 @@ const Home: React.FC = () => {
               alert("Medical");
             }}
             style={{ width: 300 }}
-            cover={<img alt="Medical" src="./feature-2.jpg" />}>
+            cover={<img alt="Medical" src={`.${BASENAME}/feature-2.jpg`} />}>
             <Meta title="Medical" description="Book Now" />
           </Card>
           <Card
@@ -101,7 +102,7 @@ const Home: React.FC = () => {
               alert("Services");
             }}
             style={{ width: 300 }}
-            cover={<img alt="Services" src="./feature-3.jpg" />}>
+            cover={<img alt="Services" src={`.${BASENAME}/feature-3.jpg`} />}>
             <Meta title="Services" description="Book Now" />
           </Card>
         </Flex>
