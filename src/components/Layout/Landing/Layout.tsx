@@ -1,7 +1,7 @@
 import {Layout as AntLayout, Menu} from "antd";
 import {Content, Header} from "antd/es/layout/layout";
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/authHooks/useAuth.tsx";
 import LayoutFooter from "./FooterLayout";
 import UserAvatar from "../../UserAvatar/UserAvatar";
 import AuthButtons from "../AuthButton/AuthButtons";

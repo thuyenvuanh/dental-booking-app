@@ -1,6 +1,6 @@
 import {isNil} from "lodash";
 
-export class LocalStorage {
+export class SessionStorage {
     static set = (key: string, value: object): string => {
         const encodedJson = JSON.stringify(value);
         window.localStorage.setItem(key, encodedJson);
@@ -8,7 +8,7 @@ export class LocalStorage {
     };
 
     static get = <T>(key: string) => {
-        const encodedValue: string | null = window.localStorage.getItem(key);
+        const encodedValue: string | null = window.sessionStorage.getItem(key);
         if (isNil(encodedValue)) {
             return null;
         }
@@ -22,8 +22,8 @@ export class LocalStorage {
     };
 
     static clear = (key: string) => {
-        window.localStorage.removeItem(key);
+        window.sessionStorage.removeItem(key);
     };
 
-    static clearAll = () => window.localStorage.clear();
+    static clearAll = () => window.sessionStorage.clear();
 }

@@ -61,8 +61,13 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
 
     const dateCellRender = (value: Dayjs) => {
         const listData = getEventOfDay(value);
-        if (listData.length != 0) return <Alert
-            message={`${listData.length} appointment${listData.length > 1 ? "s" : ""}`}/>;
+        if (listData.length != 0) return (
+          <Alert
+            message={`${listData.length} apmnts${
+              listData.length > 1 ? "s" : ""
+            }`}
+          />
+        );
     };
 
     const cellRender: CalendarProps<Dayjs>['cellRender'] = (current, info) => {

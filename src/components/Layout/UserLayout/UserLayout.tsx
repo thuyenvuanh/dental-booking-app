@@ -1,7 +1,7 @@
 import {Layout, Menu, theme} from "antd";
 import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
 import UserAvatar from "../../UserAvatar/UserAvatar";
-import {useAuth} from "../../../hooks/useAuth";
+import {useAuth} from "../../../hooks/authHooks/useAuth.tsx";
 import AuthButtons from "../AuthButton/AuthButtons";
 import {useCallback, useEffect, useState} from "react";
 import routes from "../../../constants/routes";

@@ -22,6 +22,15 @@ export interface AuthToken {
     token: string;
     refreshToken: string;
 }
+export type AppointmentOptionsType = "byDentist" | "bySpecificDate" | "";
+
+export interface HookProps {
+  children: React.ReactNode;
+}
+
+export interface AuthDetails {
+  userDetails?: User;
+}
 
 export interface Dentist {
     id: string;
