@@ -4,7 +4,7 @@ import { My3 } from "../Appointment.style";
 import AppointmentOptions from "./AppointmentOptions";
 import NewAppointmentProvider, {
   useNewAppointmentContext,
-} from "../../../hooks/authHooks/NewAppointment";
+} from "../../../hooks/appointmentHooks/NewAppointment";
 import FormByDentist from "./FormByDentist";
 import FormBySpecDate from "./FormBySpecDate";
 

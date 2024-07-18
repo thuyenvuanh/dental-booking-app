@@ -4,7 +4,6 @@ import { FullHeightDiv } from "./Login.style";
 import { useEffect, useState } from "react";
 import LoginForm from "../LoginForm/LoginForm";
 import RegisterForm from "../RegisterForm/RegisterForm";
-import { useAuth } from "../../hooks/authHooks/useAuth.tsx";
 import {
   Link,
   useLocation,
@@ -13,6 +12,7 @@ import {
 } from "react-router-dom";
 import { isEmpty, isNil } from "lodash";
 import { AuthStateLocation } from "../../type.ts";
+import { useAuth } from "../../hooks/authHooks/useAuth.tsx";
 
 const Login: React.FC = () => {
   const [searchParams, _] = useSearchParams();

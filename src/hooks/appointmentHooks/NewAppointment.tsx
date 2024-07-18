@@ -53,7 +53,7 @@ const NewAppointmentProvider: React.FC<HookProps> = ({ children }) => {
         setApmtType,
         setIsFormDirty,
         handleBack,
-        nextStep
+        nextStep,
       }}>
       {children}
     </NewAppointmentContext.Provider>

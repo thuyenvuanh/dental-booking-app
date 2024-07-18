@@ -105,3 +105,17 @@ export interface ApplicationUser {
     appointments: Appointment[];
     appointmentNotifications: AppointmentNotification[];
 }
+
+export interface SignUpForm {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  userName: string;
+  isAdmin: string;
+  dob: string;
+  phoneNumber: string;
+  address: string;
+  sex: boolean;
+  status: number;
+}

@@ -1,16 +1,52 @@
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import {
+  UserOutlined,
+  LockOutlined,
+  PhoneOutlined,
+  FieldStringOutlined,
+} from "@ant-design/icons";
+import { Button, Form, Input, Radio } from "antd";
+import { defaultSignUpForm } from "../../constants/default";
+import { useAuth } from "../../hooks/authHooks/useAuth";
+import { SignUpForm } from "../../type";
 
 const RegisterForm: React.FC = () => {
+  const { signUp } = useAuth();
+
+  const handleSignUp = (signUpForm: SignUpForm) => {
+    signUp(signUpForm);
+  };
+
   return (
     <Form
-      initialValues={{
-        email: "",
-        password: "",
-        rePassword: "",
-      }}
-      onFinish={(values) => console.log(values)}
+      initialValues={defaultSignUpForm}
+      onFinish={handleSignUp}
       style={{ width: "100%" }}>
+      <Form.Item
+        name="firstName"
+        rules={[
+          {
+            required: true,
+            message: "This field is required",
+          },
+          {
+            type: "string",
+          },
+        ]}>
+        <Input placeholder="First Name" prefix={<FieldStringOutlined />} />
+      </Form.Item>
+      <Form.Item
+        name="lastName"
+        rules={[
+          {
+            required: true,
+            message: "This field is required",
+          },
+          {
+            type: "string",
+          },
+        ]}>
+        <Input placeholder="Last Name" prefix={<FieldStringOutlined />} />
+      </Form.Item>
       <Form.Item
         name="email"
         rules={[
@@ -24,6 +60,19 @@ const RegisterForm: React.FC = () => {
           },
         ]}>
         <Input placeholder="Email" prefix={<UserOutlined />} />
+      </Form.Item>
+      <Form.Item
+        name="username"
+        rules={[
+          {
+            required: true,
+            message: "This field is required",
+          },
+          {
+            type: "string",
+          },
+        ]}>
+        <Input placeholder="Username" prefix={<UserOutlined />} />
       </Form.Item>
       <Form.Item
         name="password"
@@ -53,7 +102,55 @@ const RegisterForm: React.FC = () => {
             },
           }),
         ]}>
-        <Input.Password placeholder="Password" prefix={<LockOutlined />} />
+        <Input.Password
+          placeholder="Confirm password"
+          prefix={<LockOutlined />}
+        />
+      </Form.Item>
+      <Form.Item
+        name="phoneNumber"
+        rules={[
+          {
+            required: true,
+            message: "This field is required",
+          },
+          {
+            type: "string",
+          },
+          {
+            max: 12,
+            min: 10,
+            message: "10-12 digits phone number",
+          },
+        ]}>
+        <Input placeholder="Phone number" prefix={<PhoneOutlined />} />
+      </Form.Item>
+      <Form.Item
+        name="address"
+        rules={[
+          {
+            required: true,
+            message: "This field is required",
+          },
+          {
+            type: "string",
+          },
+        ]}>
+        <Input.TextArea placeholder="Address" />
+      </Form.Item>
+      <Form.Item
+        label="Gender"
+        name="sex"
+        rules={[
+          {
+            required: true,
+            message: "This field is required",
+          },
+        ]}>
+        <Radio.Group>
+          <Radio value={true}>Male</Radio>
+          <Radio value={false}>Female</Radio>
+        </Radio.Group>
       </Form.Item>
       <Form.Item>
         <Button htmlType="submit" type="primary" style={{ width: "100%" }}>

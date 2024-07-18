@@ -1,5 +1,5 @@
 import { Button, Typography } from "antd";
-import { useNewAppointmentContext } from "../../../hooks/authHooks/NewAppointment";
+import { useNewAppointmentContext } from "../../../hooks/appointmentHooks/NewAppointment";
 
 const FormByDentist = () => {
   const { currentStep, setCurrentStep } = useNewAppointmentContext();

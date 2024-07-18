@@ -1,7 +1,7 @@
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 import {Button, Checkbox, Form, Input} from "antd";
-import {useAuth} from "../../hooks/authHooks/useAuth.tsx";
 import {useNavigate} from "react-router-dom";
+import { useAuth } from "../../hooks/authHooks/useAuth";
 
 export interface LoginFormProps {
     username: string;
