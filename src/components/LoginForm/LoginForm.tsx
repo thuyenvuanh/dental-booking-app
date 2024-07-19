@@ -23,7 +23,7 @@ const LoginForm: React.FC = () => {
   };
   const onSubmit = (user: LoginFormProps) => {
     login(user)
-      .then((res) => navigate("/"))
+      .then((_) => navigate("/"))
       .catch((error) => {
         notify.error({ message: `failed to login ${error}` });
       });
