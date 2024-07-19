@@ -1,0 +1,74 @@
+#!groovy
+
+pipeline {
+    agent {
+        label 'Host'
+    }
+    parameters {
+        string(
+                name: 'BUILD_NUM',
+                defaultValue: '',
+                description: 'Deploy target'
+        )
+        booleanParam(
+                name: 'Deploy',
+                defaultValue: false,
+                description: 'Deploy dental-booking-app to docker'
+        )
+        booleanParam(
+                name: 'DEL_OLD_IMG',
+                defaultValue: true,
+                description: 'Only keep newest build'
+        )
+    }
+    stages {
+        stage('Build dental-booking-app') {
+            when{
+                expression {
+                    return !params.Deploy
+                }
+            }
+            steps {
+                sh """
+                    docker build -t dental-booking-app:${env.BUILD_NUMBER} .
+                """
+                script {
+                    currentBuild.description = "image_id -> dental-booking-app:" + sh(
+                            script: "docker image ls | grep dental-booking-app | grep ${env.BUILD_NUMBER} | awk \'{print \$2}\'",
+                            returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+        stage('Deploy') {
+            when{
+                expression {
+                    return params.Deploy
+                }
+            }
+            steps {
+                script {
+                    sh  """
+                            if [[ -z "${params.BUILD_NUM}" ]]; then
+                                echo "BUILD_NUM is required";
+                                exit -1;
+                            fi
+                            docker stop dental-booking-app || true
+                            docker rm dental-booking-app || true
+                            docker run --publish 7210:80 --detach --restart=always --name dental-booking-app dental-booking-app:${params.BUILD_NUM}
+                        """
+                }
+            }
+        }
+        stage('Delete old build') {
+            when {
+                expression {
+                    return params.DEL_OLD_IMG && !params.Deploy
+                }
+            }
+            steps {
+                build job: 'remove-docker-image', parameters: [string(name: 'IMAGE_NAME', value: 'dental-booking-app'), string(name: 'BUILD_NUM', value: "${env.BUILD_NUMBER}")]
+            }
+        }
+    }
+}

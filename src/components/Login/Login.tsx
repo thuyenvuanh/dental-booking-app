@@ -1,49 +1,35 @@
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "_" }]*/
-import { Flex, notification, Tabs, Typography } from "antd";
+import { Flex, Tabs, Typography } from "antd";
 import { FullHeightDiv } from "./Login.style";
 import { useEffect, useState } from "react";
 import LoginForm from "../LoginForm/LoginForm";
 import RegisterForm from "../RegisterForm/RegisterForm";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { isEmpty, isNil } from "lodash";
 import { AuthStateLocation } from "../../type.ts";
-import { useAuth } from "../../hooks/authHooks/useAuth.tsx";
+import { useNotification } from "../../hooks/notificationHooks/useNotification.tsx";
 
 const Login: React.FC = () => {
   const [searchParams, _] = useSearchParams();
   const [authType, setAuthType] = useState<string>(
     isNil(searchParams.get("register")) ? "login" : "register"
   );
-  const [notiApi, contextHolder] = notification.useNotification();
-  const navigate = useNavigate();
+  const { notify } = useNotification();
   const authStateLocation = useLocation().state as AuthStateLocation;
-  const { authDetails } = useAuth();
 
   useEffect(() => {
     if (!isNil(authStateLocation) && !isEmpty(authStateLocation.type)) {
       try {
         const { type, message, description } = authStateLocation;
-        notiApi.open({ type, message, description });
+        notify.open({ type, message, description });
       } catch {
         console.error(`Cannot show notification`);
       }
     }
   }, []);
 
-  useEffect(() => {
-    if (!isNil(authDetails)) {
-      navigate("/");
-    }
-  }, [authDetails]);
-
   return (
     <Typography>
-      {contextHolder}
       <FullHeightDiv>
         <Flex align="center" vertical style={{ padding: "200px 0" }}>
           <Link to={"/"}>

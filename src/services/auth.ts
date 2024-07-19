@@ -1,38 +1,34 @@
 import axios from "axios";
 import { LoginFormProps } from "../components/LoginForm/LoginForm";
-import { AuthToken, SignUpForm } from "../type";
+import { AuthDetails, AuthToken, SignUpForm } from "../type";
 import { omit } from "lodash";
 
 export const loginApi = async (user: LoginFormProps): Promise<AuthToken> => {
-  try {
-    const response = await axios.post("/auth/sigIn", omit(user, "remember"));
-    return response.data as AuthToken;
-  } catch {
-    console.log(`Cannot sign sign with user ${user.username}`);
-    return { token: "", refreshToken: "" };
-  }
+  const response = await axios.post("/auth/sigIn", omit(user, "remember"));
+  return response.data as AuthToken;
 };
 
 export const signUpApi = async (signUpForm: SignUpForm) => {
-  try {
-    const response = await axios.post("/auth/signUp", signUpForm);
-    return response.data;
-  } catch {
-    console.log(`Cannot sign up for user ${signUpForm}`);
-    return false;
-  }
+  const response = await axios.post("/auth/signUp", signUpForm);
+  return response.data;
 };
 
-export const currentUser = async (authToken: string) => {
-  try {
-    const response = await axios.get("/auth/currentUser", {
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      }
-    });
-    return response.data.user;
-  } catch {
-    console.log(`Fail to get current user`);
-    return false;
-  }
-}
+export const currentUserApi = async () => {
+  const response = await axios.get("/auth/currentUser");
+  return response.data.user;
+};
+
+export const refreshTokenApi = async (user: AuthDetails) => {
+  const response = await axios.post("/auth/refresh-token", null, {
+    params: {
+      refreshToken: user.userDetails?.refreshToken,
+      userId: user.userDetails?.id,
+    },
+  });
+  return response.data;
+};
+
+export const signOutApi = async () => {
+  const response = await axios.delete("/auth/signOut");
+  return response.data;
+};

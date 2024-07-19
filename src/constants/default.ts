@@ -1,5 +1,6 @@
 import { SignUpForm } from "../type";
 
+export const AUTH_DETAILS = "authDetails";
 export const defaultSignUpForm: SignUpForm = {
   email: "",
   firstName: "",

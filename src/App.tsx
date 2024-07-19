@@ -10,6 +10,7 @@ import AppointmentView from "./components/Appointment/View/View.tsx";
 import React, { useEffect } from "react";
 import axios from "axios";
 import NewAppointment from "./components/Appointment/New/New.tsx";
+import { NotificationProvider } from "./hooks/notificationHooks/notificationHook.tsx";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -23,25 +24,27 @@ const App: React.FC = () => {
 
   return (
     <AntApp>
-      <AuthProvider>
-        <ConfigProvider theme={themeConfig}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" Component={Login} />
-              <Route element={<LandingLayout />}>
-                <Route path="/" Component={Home} />
-                <Route path="/dentists" element={<>Dentists</>} />
-                <Route path="/book" element={<>Booking</>} />
-              </Route>
-              <Route Component={UserLayout}>
-                <Route path="/apmt" Component={AppointmentView} />
-                <Route path="/apmt/new" Component={NewAppointment} />
-              </Route>
-              <Route path="*" element={<>404 Not Found</>} />
-            </Routes>
-          </BrowserRouter>
-        </ConfigProvider>
-      </AuthProvider>
+      <NotificationProvider>
+        <AuthProvider>
+          <ConfigProvider theme={themeConfig}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" Component={Login} />
+                <Route element={<LandingLayout />}>
+                  <Route path="/" Component={Home} />
+                  <Route path="/dentists" element={<>Dentists</>} />
+                  <Route path="/book" element={<>Booking</>} />
+                </Route>
+                <Route Component={UserLayout}>
+                  <Route path="/apmt" Component={AppointmentView} />
+                  <Route path="/apmt/new" Component={NewAppointment} />
+                </Route>
+                <Route path="*" element={<>404 Not Found</>} />
+              </Routes>
+            </BrowserRouter>
+          </ConfigProvider>
+        </AuthProvider>
+      </NotificationProvider>
     </AntApp>
   );
 };

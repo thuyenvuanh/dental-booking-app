@@ -1,6 +1,6 @@
-import { User } from "../type.ts";
+import { UserDetails } from "../type.ts";
 
-export const mockUser: User = {
+export const mockUser: UserDetails = {
   email: "test@gmail.com",
   userId: "123456",
 };

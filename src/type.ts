@@ -1,26 +1,57 @@
 import {MenuProps} from "antd";
 
-export interface User {
-    userId: string;
-    email: string;
+export interface UserDetails {
+  $id: string;
+  dob: any;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  address: string;
+  sex: boolean;
+  status: number;
+  avatarUrl: any;
+  isConfirmEmail: boolean;
+  isActive: boolean;
+  createAt: string;
+  updateAt: any;
+  refreshToken: string;
+  dateExpireRefreshToken: string;
+  dentist: any;
+  clinicDentals: any;
+  appointments: any;
+  appointmentNotifications: any;
+  id: string;
+  userName: string;
+  normalizedUserName: string;
+  email: string;
+  normalizedEmail: string;
+  emailConfirmed: boolean;
+  passwordHash: string;
+  securityStamp: string;
+  concurrencyStamp: string;
+  phoneNumberConfirmed: boolean;
+  twoFactorEnabled: boolean;
+  lockoutEnd: any;
+  lockoutEnabled: boolean;
+  accessFailedCount: number;
 }
 
 export interface AuthStateLocation {
-    type: "success" | "info" | "error" | "warning";
-    message: string;
-    description: string;
+  type: "success" | "info" | "error" | "warning";
+  message: string;
+  description: string;
 }
 
 export type MenuItem = Required<MenuProps>["items"][number];
 
 export interface LevelKeysProps {
-    key?: string;
-    children?: LevelKeysProps[];
+  key?: string;
+  children?: LevelKeysProps[];
 }
 
 export interface AuthToken {
-    token: string;
-    refreshToken: string;
+  token: string;
+  refreshToken: string;
 }
 export type AppointmentOptionsType = "byDentist" | "bySpecificDate" | "";
 
@@ -29,7 +60,7 @@ export interface HookProps {
 }
 
 export interface AuthDetails {
-  userDetails?: User;
+  userDetails?: UserDetails;
 }
 
 export interface Dentist {
