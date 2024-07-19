@@ -53,9 +53,9 @@ pipeline {
                                 echo "BUILD_NUM is required";
                                 exit -1;
                             fi
-                            docker stop dental-booking-app || true
-                            docker rm dental-booking-app || true
-                            docker run --publish 7210:80 --detach --restart=always --name dental-booking-app dental-booking-app:${params.BUILD_NUM}
+                            docker stop dba || true
+                            docker rm dba || true
+                            docker run --publish 5000:5000 --detach --restart=always --name dba dental-booking-app:${params.BUILD_NUM}
                         """
                 }
             }
