@@ -1,16 +1,27 @@
 import { Button, Col, Divider, Row, Typography } from "antd";
 import BookCalendar from "../../BookCalendar/BookCalendar.tsx";
 import { useEffect, useState } from "react";
-import { mockAppointments } from "../../../mocks/appoinments.ts";
 import { Appointment } from "../../../type.ts";
 import { useNavigate } from "react-router-dom";
+import { listAppointmentApi } from "../../../services/appointment.ts";
+import { useAuth } from "../../../hooks/authHooks/useAuth.tsx";
+import { useNotification } from "../../../hooks/notificationHooks/useNotification.tsx";
 
 const AppointmentView: React.FC = () => {
   const navigate = useNavigate();
+  const { authDetails } = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const { notify } = useNotification();
 
   function getAppointments() {
-    setAppointments(mockAppointments);
+    listAppointmentApi(authDetails?.userDetails?.id!)
+      .then((apmts) => {
+        setAppointments(apmts);
+      })
+      .catch((e) => {
+        console.error(e);
+        notify.error({ message: "failed to get appointments" });
+      });
   }
 
   useEffect(() => {

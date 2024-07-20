@@ -23,7 +23,7 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
     const showModal = (date: Dayjs) => {
         if (getEventOfDay(date).length != 0) {
             const sortedApmts = deepCopy(getEventOfDay(date));
-            setApmts(sortedApmts.sort((a, b) => dayjs(a.date).diff(dayjs(b.date))));
+            setApmts(sortedApmts.sort((a, b) => dayjs(a.startAt).diff(dayjs(b.startAt))));
             if (selectedDate.getMonth() == date.month()) {
                 setIsModalOpen(true);
             }
@@ -38,7 +38,7 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
 
     const getEventOfDay = useCallback((date: Dayjs): Appointment[] => {
         return appointments
-            .filter(a => dayjs(a.date)
+            .filter(a => dayjs(a.startAt)
                 .startOf("day")
                 .diff(date.startOf("day")) == 0);
     }, [appointments]);
@@ -100,9 +100,9 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
                                             strong
                                             style={{textAlign: "right"}}
                                         >
-                                            {dayjs(item.date).format('HH:MM')}
+                                            {dayjs(item.startAt).format('HH:MM')}
                                         </Typography.Text>
-                                        <Typography>{dayjs(item.date).format('DD/MM/YYYY')}</Typography>
+                                        <Typography>{dayjs(item.startAt).format('DD/MM/YYYY')}</Typography>
                                     </div>
                                 </List.Item>
                             </>

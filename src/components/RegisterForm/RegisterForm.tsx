@@ -26,33 +26,33 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           {
             type: "string",
           },
         ]}>
-        <Input placeholder="First Name" prefix={<FieldStringOutlined />} />
+        <Input placeholder="Họ" prefix={<FieldStringOutlined />} />
       </Form.Item>
       <Form.Item
         name="lastName"
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           {
             type: "string",
           },
         ]}>
-        <Input placeholder="Last Name" prefix={<FieldStringOutlined />} />
+        <Input placeholder="Tên" prefix={<FieldStringOutlined />} />
       </Form.Item>
       <Form.Item
         name="email"
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           {
             type: "email",
@@ -66,7 +66,7 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           {
             type: "string",
@@ -79,7 +79,7 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
         ]}>
         <Input.Password placeholder="Password" prefix={<LockOutlined />} />
@@ -89,7 +89,7 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
@@ -112,7 +112,7 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           {
             type: "string",
@@ -130,7 +130,7 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
           {
             type: "string",
@@ -144,7 +144,7 @@ const RegisterForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
         ]}>
         <Radio.Group>

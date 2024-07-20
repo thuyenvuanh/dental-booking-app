@@ -1,6 +1,5 @@
 import { Button, Steps, Typography } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { My3 } from "../Appointment.style";
 import AppointmentOptions from "./AppointmentOptions";
 import NewAppointmentProvider, {
   useNewAppointmentContext,
@@ -35,14 +34,19 @@ const ContextLayer = () => {
 
   return (
     <>
-      <Steps current={currentStep} items={steps} />
-      <My3>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "stretch",
+        }}>
         <Button onClick={handleBack} icon={<LeftOutlined />}>
           Trở về
         </Button>
-      </My3>
+        <div style={{ width: "12px" }}></div>
+        <Steps current={currentStep} items={steps} />
+      </div>
       {currentStep == 0 && <AppointmentOptions nextStep={nextStep} />}
-      {/* TODO: create form for this */}
       {currentStep == 1 && apmtType == "byDentist" && <FormByDentist />}
       {currentStep == 1 && apmtType == "bySpecificDate" && <FormBySpecDate />}
       {currentStep == 2 && <>Success</>}

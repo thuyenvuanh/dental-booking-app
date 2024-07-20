@@ -80,8 +80,8 @@ export interface ClinicDetail {
     id: string;
     name: string;
     address: string;
-    openTime: Date;
-    closeTime: Date;
+    openTime: string;
+    closeTime: string;
     slotDuration: number;
     maxPatientsPerSlot: number;
     maxTreatmentPerSlot: number;
@@ -104,17 +104,20 @@ export interface AppointmentNotification {
 }
 
 export interface Appointment {
-    id: string;
-    clinicId: string;
-    customerId: string;
-    dentistId: string;
-    date: Date;
-    type: number;
-    periodicInterval: number;
-    status: number;
-    createAt: Date;
-    updateAt: Date;
+  id: string
+  clinicId: string
+  customerId: string
+  dentistId: string
+  startAt: string
+  endAt: string
+  type: string
+  periodicInterval: number
+  status: number
+  note: any
+  createAt: string
+  updateAt: any
 }
+
 
 export interface ApplicationUser {
     dob: Date;
@@ -143,7 +146,7 @@ export interface SignUpForm {
   lastName: string;
   password: string;
   userName: string;
-  isAdmin: string;
+  isAdmin: boolean;
   dob: string;
   phoneNumber: string;
   address: string;

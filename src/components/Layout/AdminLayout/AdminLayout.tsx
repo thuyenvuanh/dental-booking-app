@@ -1,21 +1,22 @@
-import {Layout, Menu, theme} from "antd";
-import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
-import UserAvatar from "../../UserAvatar/UserAvatar";
-import {useAuth} from "../../../hooks/authHooks/useAuth.tsx";
-import AuthButtons from "../AuthButton/AuthButtons";
-import {useCallback, useEffect, useState} from "react";
+import { theme, Layout, Menu, Spin } from "antd";
+import { Header, Content } from "antd/es/layout/layout";
+import Sider from "antd/es/layout/Sider";
+import { useState, useEffect, useCallback } from "react";
+import { useLocation, useNavigate, Link, Outlet } from "react-router-dom";
 import routes from "../../../constants/routes";
-import {AuthStateLocation} from "../../../type.ts";
-import { userLayoutItems } from "../../../constants/userMenu";
-import { BgGrey } from "./UserLayout.style";
+import { adminLayoutItems } from "../../../constants/userMenu";
+import { useAuth } from "../../../hooks/authHooks/useAuth";
+import { AuthStateLocation } from "../../../type";
+import UserAvatar from "../../UserAvatar/UserAvatar";
+import AuthButtons from "../AuthButton/AuthButtons";
+import { BgGrey } from "../AdminLayout/AdminLayout.style";
 
-const { Header, Content, Sider } = Layout;
-
-const UserLayout: React.FC = () => {
-  const { isAuthenticated, role, isAuthLoading } = useAuth();
+const AdminLayout: React.FC = () => {
+  // define vars
+  const { isAuthenticated, isAuthLoading } = useAuth();
   const location = useLocation();
   const getCurrentKey = () => {
-    const item = userLayoutItems.find((s) =>
+    const item = adminLayoutItems.find((s) =>
       location.pathname.startsWith(s?.key?.toString() ?? "")
     );
     return [item?.key?.toString() ?? ""];
@@ -25,20 +26,36 @@ const UserLayout: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  // effect and listenings
   useEffect(() => {
     checkAuth();
   }, []);
 
+  const checkAuth = useCallback(() => {
+    if (!isAuthenticated() && !isAuthLoading) {
+      navigate(routes.LOGIN, {
+        replace: true,
+        state: {
+          type: "error",
+          message: "Logged off",
+          description: `Your session has ended, please log in again`,
+        } as AuthStateLocation,
+      });
+    } else {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, isAuthLoading]);
+
   useEffect(() => {
     //log off listener
-    if (!isAuthenticated()) {
+    if (!isAuthenticated() && !isAuthLoading) {
       navigate(routes.GUEST.HOME);
-      if (role != "CUSTOMER") {
-        navigate(routes[role].HOME);
-      }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isAuthLoading]);
 
+  //logic
   const navigatePage = ({ key }: { key: string }): void => {
     const currentPath = window.location.pathname;
     if (
@@ -49,18 +66,9 @@ const UserLayout: React.FC = () => {
     }
   };
 
-  const checkAuth = useCallback(() => {
-    if (!isAuthenticated()) {
-      navigate(routes.LOGIN, {
-        replace: true,
-        state: {
-          type: "error",
-          message: "Logged off",
-          description: `Your session has ended, please log in again`,
-        } as AuthStateLocation,
-      });
-    }
-  }, [isAuthenticated]);
+  if (isLoading) {
+    return <Spin fullscreen spinning />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -74,7 +82,7 @@ const UserLayout: React.FC = () => {
         <Link to="/" style={{ display: "flex", alignItems: "center" }}>
           <img src={`/logo.svg`} draggable="false" />
         </Link>
-        {isAuthenticated() && !isAuthLoading ? <UserAvatar /> : <AuthButtons />}
+        {isAuthenticated() ? <UserAvatar /> : <AuthButtons />}
       </Header>
       <BgGrey>
         <Layout
@@ -91,7 +99,7 @@ const UserLayout: React.FC = () => {
               defaultSelectedKeys={stateOpenKeys}
               onClick={navigatePage}
               style={{ height: "100%" }}
-              items={userLayoutItems}
+              items={adminLayoutItems}
             />
           </Sider>
           <Content style={{ padding: "0 16px" }}>
@@ -103,4 +111,4 @@ const UserLayout: React.FC = () => {
   );
 };
 
-export default UserLayout;
+export default AdminLayout;

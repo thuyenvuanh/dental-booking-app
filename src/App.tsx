@@ -11,6 +11,9 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import NewAppointment from "./components/Appointment/New/New.tsx";
 import { NotificationProvider } from "./hooks/notificationHooks/notificationHook.tsx";
+import AdminLayout from "./components/Layout/AdminLayout/AdminLayout.tsx";
+import DentistPage from "./components/Dentist/Dentist.tsx";
+import NewDentistPage from "./components/Dentist/New/New.tsx";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -38,6 +41,10 @@ const App: React.FC = () => {
                 <Route Component={UserLayout}>
                   <Route path="/apmt" Component={AppointmentView} />
                   <Route path="/apmt/new" Component={NewAppointment} />
+                </Route>
+                <Route Component={AdminLayout}>
+                  <Route path="/dentist" Component={DentistPage} />
+                  <Route path="/dentist/new" Component={NewDentistPage} />
                 </Route>
                 <Route path="*" element={<>404 Not Found</>} />
               </Routes>

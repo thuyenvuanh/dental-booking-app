@@ -10,6 +10,9 @@ const routes = {
       CREATE: "/apmt/create",
     },
   },
+  ADMINISTRATOR: {
+    HOME: "/dentist",
+  },
 };
 
 export const BASENAME = "/dental-booking-app";

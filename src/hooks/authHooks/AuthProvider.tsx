@@ -2,7 +2,7 @@ import { AuthDetails, HookProps, SignUpForm } from "../../type.ts";
 import { LoginFormProps } from "../../components/LoginForm/LoginForm.tsx";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { LocalStorage } from "../../utils/storageUtils.ts";
-import { isEmpty, isNil, isNull } from "lodash";
+import { isEmpty, isNil } from "lodash";
 import {
   currentUserApi,
   loginApi,
@@ -12,7 +12,8 @@ import {
 } from "../../services/auth.ts";
 import axios, { AxiosRequestHeaders } from "axios";
 import { useNotification } from "../notificationHooks/useNotification.tsx";
-import { AUTH_DETAILS } from "../../constants/default.ts";
+import { AUTH_DETAILS, ROLE, ROLE_KEY } from "../../constants/default.ts";
+import { parseJwt } from "../../utils/jwt.ts";
 
 export interface AuthContextInterface {
   authDetails: AuthDetails | null;
@@ -20,6 +21,8 @@ export interface AuthContextInterface {
   signUp: (signUpForm: SignUpForm) => any;
   logout: () => void;
   isAuthenticated: () => boolean;
+  isAuthLoading: boolean;
+  role: ROLE;
   accessToken: string;
   refreshToken: string;
 }
@@ -32,38 +35,45 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   const [authDetails, setAuthDetails] = useState<AuthDetails | null>(
     LocalStorage.get<AuthDetails>(AUTH_DETAILS)
   );
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [role, setRole] = useState<ROLE>("GUEST");
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
   const [injectAuth, setInjectAuth] = useState(-1);
   const { notify } = useNotification();
   useEffect(() => {
     const loggedInUser = LocalStorage.get<AuthDetails>(AUTH_DETAILS);
-    if (!isNull(loggedInUser)) {
+    if (!isNil(loggedInUser)) {
       setAuthDetails(loggedInUser);
       setTimeout(() => {
         if (loggedInUser?.userDetails?.refreshToken) {
-          refreshTokenApi(loggedInUser).then((authToken) => {
-            setAccessToken(authToken.token);
-            setRefreshToken(authToken.refreshToken);
-            notify.success({
-              message: "Session recovered successfully",
-            });
-          });
-        } else {
-          signOutApi().then(() => {
-            setAccessToken("");
-            setRefreshToken("");
-            setAuthDetails(null);
-            LocalStorage.clear(AUTH_DETAILS);
-            notify.warning({ message: "You have been signed out" });
-          });
+          refreshTokenApi(loggedInUser)
+            .then((authToken) => {
+              setAccessToken(authToken.token);
+              setRefreshToken(authToken.refreshToken);
+              notify.success({
+                message: "Session recovered successfully",
+              });
+            })
+            .catch((error) => {
+              logout();
+              console.error(error);
+              notify.warning({ message: "You have been logged out" });
+            })
+            .finally(() => setIsAuthLoading(false));
         }
       }, 500);
+      return;
     }
+    setIsAuthLoading(false);
   }, []);
 
   useEffect(() => {
     if (!isEmpty(accessToken)) {
+      const role = (
+        parseJwt(accessToken)[ROLE_KEY] as string
+      ).toUpperCase() as ROLE;
+      setRole(role);
       const injectAuth = axios.interceptors.request.use((config) => ({
         ...config,
         headers: {
@@ -102,6 +112,8 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   );
 
   const logout = useCallback(() => {
+    signOutApi();
+    setRole("GUEST");
     setAuthDetails(null);
     LocalStorage.clear(AUTH_DETAILS);
     axios.interceptors.request.eject(injectAuth);
@@ -127,6 +139,8 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        role,
+        isAuthLoading,
         authDetails,
         login,
         isAuthenticated,

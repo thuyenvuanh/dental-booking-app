@@ -39,7 +39,7 @@ const LoginForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
         ]}>
         <Input placeholder="Username" prefix={<UserOutlined />} />
@@ -49,7 +49,7 @@ const LoginForm: React.FC = () => {
         rules={[
           {
             required: true,
-            message: "This field is required",
+            message: "Thông tin bắt buộc",
           },
         ]}>
         <Input.Password placeholder="Password" prefix={<LockOutlined />} />
