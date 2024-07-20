@@ -4,6 +4,7 @@ import { listDentistsApi } from "../../services/dentist";
 import { Dentist } from "../../type";
 import { useNotification } from "../../hooks/notificationHooks/useNotification";
 import { useNavigate } from "react-router-dom";
+import { EditOutlined } from "@ant-design/icons";
 
 interface DentistPageProps {}
 
@@ -25,9 +26,10 @@ const DentistPage: FunctionComponent<DentistPageProps> = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const submit = (dentist: Dentist) => {
-    // not yet implemented
+  const handleStartEdit = (dentist: Dentist) => {
+    console.log(dentist);
   };
+
   return (
     <>
       <Flex align="center" justify="space-between">
@@ -49,9 +51,17 @@ const DentistPage: FunctionComponent<DentistPageProps> = () => {
         renderItem={(dentist) => (
           <List.Item
             key={dentist.id}
+            actions={[
+              <Button
+                size="small"
+                type="text"
+                icon={<EditOutlined />}
+                onClick={() => handleStartEdit(dentist)}>
+                Edit
+              </Button>,
+            ]}
             extra={
               <img
-                width={100}
                 alt="logo"
                 style={{ borderRadius: "8px" }}
                 src="https://randomuser.me/api/portraits/men/69.jpg"

@@ -22,7 +22,7 @@ const FormByDentist = () => {
       });
   }, []);
 
-  const submit = (dentist: Dentist) => {
+  const submit = (_: Dentist) => {
     setCurrentStep(currentStep + 1);
   };
 
