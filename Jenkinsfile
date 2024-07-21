@@ -77,7 +77,7 @@ pipeline {
                 build job: 'remove-docker-image', parameters: [string(name: 'IMAGE_NAME', value: 'dental-booking-app'), string(name: 'BUILD_NUM', value: "${params.BUILD_NUM}")]
                 script {
                     currentBuild.description = "image_id -> dental-booking-app:" + sh(
-                            script: "docker image ls | grep dental-booking-app | grep ${params.BUILD_NUMBER} | awk \'{print \$2}\'",
+                            script: "docker image ls | grep dental-booking-app | grep ${params.BUILD_NUMB} | awk \'{print \$2}\'",
                             returnStdout: true
                     ).trim()
                 }
