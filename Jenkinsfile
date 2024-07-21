@@ -63,7 +63,7 @@ pipeline {
         stage('Delete old build') {
             when {
                 expression {
-                    return params.DEL_OLD_IMG && !params.Deploy
+                    return params.DEL_OLD_IMG && params.Deploy
                 }
             }
             steps {
