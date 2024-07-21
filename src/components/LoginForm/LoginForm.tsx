@@ -3,6 +3,8 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/authHooks/useAuth";
 import { useNotification } from "../../hooks/notificationHooks/useNotification";
+import { useState } from "react";
+import { getCookie, setCookie } from "../../utils/cookies";
 
 export interface LoginFormProps {
   username: string;
@@ -11,22 +13,44 @@ export interface LoginFormProps {
 }
 
 const LoginForm: React.FC = () => {
-  const { login } = useAuth();
+  const REMEMBER_USERNAME_COOKIE = "REMEMBER_USERNAME";
+  const { login, logout, getCurrentUser } = useAuth();
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const navigate = useNavigate();
 
   const { notify } = useNotification();
 
   const initialValue: LoginFormProps = {
-    username: "",
+    username: getCookie(REMEMBER_USERNAME_COOKIE) ?? "",
     password: "",
     remember: false,
   };
+
   const onSubmit = (user: LoginFormProps) => {
+    setIsSigningIn(true);
     login(user)
-      .then((_) => navigate("/"))
-      .catch((error) => {
-        notify.error({ message: `failed to login ${error}` });
-      });
+      .then((_) => {
+        setTimeout(() => {
+          getCurrentUser()
+            .then((_) => {
+              notify.success({ message: "Đăng nhập thành công" });
+              setTimeout(() => {
+                setCookie(REMEMBER_USERNAME_COOKIE, user.username, 365);
+                navigate("/");
+              }, 500);
+            })
+            .catch((e) => {
+              notify.error({ message: "Lỗi lấy thông tin người dùng" });
+              console.error(e);
+            });
+        }, 500);
+      })
+      .catch((e) => {
+        notify.error({ message: `Tài khoản hoặc mật khẩu không đúng` });
+        console.error(e);
+        logout();
+      })
+      .finally(() => setIsSigningIn(false));
   };
 
   return (
@@ -55,11 +79,16 @@ const LoginForm: React.FC = () => {
         <Input.Password placeholder="Password" prefix={<LockOutlined />} />
       </Form.Item>
       <Form.Item name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
+        <Checkbox>Ghi nhớ username</Checkbox>
       </Form.Item>
       <Form.Item>
-        <Button htmlType="submit" type="primary" style={{ width: "100%" }}>
-          Login
+        <Button
+          htmlType="submit"
+          type="primary"
+          style={{ width: "100%" }}
+          loading={isSigningIn}
+          disabled={isSigningIn}>
+          Đăng nhập
         </Button>
       </Form.Item>
     </Form>

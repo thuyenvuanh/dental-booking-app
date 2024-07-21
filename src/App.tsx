@@ -14,6 +14,7 @@ import { NotificationProvider } from "./hooks/notificationHooks/notificationHook
 import AdminLayout from "./components/Layout/AdminLayout/AdminLayout.tsx";
 import DentistPage from "./components/Dentist/Dentist.tsx";
 import NewDentistPage from "./components/Dentist/New/New.tsx";
+import ScrollToTop from "./utils/ScrollToTop.tsx";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -31,6 +32,7 @@ const App: React.FC = () => {
         <AuthProvider>
           <ConfigProvider theme={themeConfig}>
             <BrowserRouter>
+              <ScrollToTop />
               <Routes>
                 <Route path="/login" Component={Login} />
                 <Route element={<LandingLayout />}>

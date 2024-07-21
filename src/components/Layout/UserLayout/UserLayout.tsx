@@ -55,8 +55,8 @@ const UserLayout: React.FC = () => {
         replace: true,
         state: {
           type: "error",
-          message: "Logged off",
-          description: `Your session has ended, please log in again`,
+          message: "Đã đăng xuất",
+          description: `Phiên làm việc đã hết hạn, vui lòng đăng nhập lại`,
         } as AuthStateLocation,
       });
     }

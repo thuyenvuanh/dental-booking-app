@@ -25,7 +25,7 @@ export const refreshTokenApi = async (user: AuthDetails) => {
       userId: user.userDetails?.id,
     },
   });
-  return response.data;
+  return response.data as { token: string; refreshToken: string };
 };
 
 export const signOutApi = async () => {

@@ -8,13 +8,17 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/authHooks/useAuth.tsx";
 import routes from "../../constants/routes";
 import { useEffect, useState } from "react";
+import { useNotification } from "../../hooks/notificationHooks/useNotification.tsx";
 
 const UserAvatar = () => {
   const { logout, role } = useAuth();
   const [items, setItems] = useState<MenuProps["items"]>([]);
+  const { notify } = useNotification();
   const logoff: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
-    logout();
+    logout().then(() => {
+      notify.success({ message: "Đăng xuất thành công" });
+    });
   };
 
   const customerItems: MenuProps["items"] = [

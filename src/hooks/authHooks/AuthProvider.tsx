@@ -1,7 +1,6 @@
 import { AuthDetails, HookProps, SignUpForm } from "../../type.ts";
 import { LoginFormProps } from "../../components/LoginForm/LoginForm.tsx";
 import { createContext, useCallback, useEffect, useState } from "react";
-import { LocalStorage } from "../../utils/storageUtils.ts";
 import { isEmpty, isNil } from "lodash";
 import {
   currentUserApi,
@@ -14,17 +13,18 @@ import axios, { AxiosRequestHeaders } from "axios";
 import { useNotification } from "../notificationHooks/useNotification.tsx";
 import { AUTH_DETAILS, ROLE, ROLE_KEY } from "../../constants/default.ts";
 import { parseJwt } from "../../utils/jwt.ts";
+import { SessionStorage } from "../../utils/sessionStorage.ts";
 
 export interface AuthContextInterface {
   authDetails: AuthDetails | null;
-  login: (user: LoginFormProps) => Promise<void>;
-  signUp: (signUpForm: SignUpForm) => any;
-  logout: () => void;
+  login: (user: LoginFormProps) => Promise<string>;
+  signUp: (signUpForm: SignUpForm) => Promise<void>;
+  logout: () => Promise<void>;
+  getCurrentUser: () => Promise<AuthDetails>;
   isAuthenticated: () => boolean;
   isAuthLoading: boolean;
   role: ROLE;
   accessToken: string;
-  refreshToken: string;
 }
 
 export const AuthContext = createContext<AuthContextInterface | undefined>(
@@ -33,24 +33,23 @@ export const AuthContext = createContext<AuthContextInterface | undefined>(
 
 const AuthProvider: React.FC<HookProps> = ({ children }) => {
   const [authDetails, setAuthDetails] = useState<AuthDetails | null>(
-    LocalStorage.get<AuthDetails>(AUTH_DETAILS)
+    SessionStorage.get<AuthDetails>(AUTH_DETAILS)
   );
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [role, setRole] = useState<ROLE>("GUEST");
   const [accessToken, setAccessToken] = useState("");
-  const [refreshToken, setRefreshToken] = useState("");
   const [injectAuth, setInjectAuth] = useState(-1);
   const { notify } = useNotification();
   useEffect(() => {
-    const loggedInUser = LocalStorage.get<AuthDetails>(AUTH_DETAILS);
-    if (!isNil(loggedInUser)) {
+    const loggedInUser = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
+    if (!isNil(loggedInUser) && !isEmpty(loggedInUser)) {
       setAuthDetails(loggedInUser);
       setTimeout(() => {
         if (loggedInUser?.userDetails?.refreshToken) {
           refreshTokenApi(loggedInUser)
             .then((authToken) => {
               setAccessToken(authToken.token);
-              setRefreshToken(authToken.refreshToken);
+              updateRefreshToken(authToken.refreshToken);
               notify.success({
                 message: "Session recovered successfully",
               });
@@ -70,10 +69,14 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
 
   useEffect(() => {
     if (!isEmpty(accessToken)) {
+      //config roles
+      //FIXME - role should be get from currentUser api
       const role = (
         parseJwt(accessToken)[ROLE_KEY] as string
       ).toUpperCase() as ROLE;
       setRole(role);
+      //FIXME - end
+
       const injectAuth = axios.interceptors.request.use((config) => ({
         ...config,
         headers: {
@@ -91,40 +94,40 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
     };
   }, [accessToken]);
 
-  useEffect(() => {
-    if (!isEmpty(accessToken) && injectAuth != -1) {
-      currentUserApi().then(({ result }) => {
-        setAuthDetails({ userDetails: result });
-        LocalStorage.set(AUTH_DETAILS, {
-          userDetails: result,
-        } as AuthDetails);
-      });
-    }
-  }, [accessToken, injectAuth]);
+  const getCurrentUser = useCallback(async () => {
+    const { result } = await currentUserApi();
+    const authDetails = {
+      userDetails: result,
+    } as AuthDetails;
+    setAuthDetails(authDetails);
+    SessionStorage.set(AUTH_DETAILS, authDetails);
+    return authDetails;
+  }, [accessToken, currentUserApi]);
 
   const login = useCallback(
     async (user: LoginFormProps) => {
-      const { token, refreshToken } = await loginApi(user);
+      const { token } = await loginApi(user);
       setAccessToken(token);
-      setRefreshToken(refreshToken);
+      return token;
     },
-    [setAuthDetails, loginApi, currentUserApi]
+    [loginApi]
   );
 
-  const logout = useCallback(() => {
-    signOutApi();
+  const logout = useCallback(async () => {
+    await signOutApi();
     setRole("GUEST");
+    setAccessToken("");
     setAuthDetails(null);
-    LocalStorage.clear(AUTH_DETAILS);
+    SessionStorage.clear(AUTH_DETAILS);
     axios.interceptors.request.eject(injectAuth);
     setInjectAuth(-1);
   }, [setAuthDetails]);
 
   const signUp = useCallback(
     async (signUpForm: SignUpForm) => {
-      let success: boolean = await signUpApi(signUpForm);
+      const success: boolean = await signUpApi(signUpForm);
       if (success) {
-        return login({
+        await login({
           username: signUpForm.userName,
           password: signUpForm.password,
           remember: false,
@@ -134,7 +137,20 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
     [signUpApi]
   );
 
-  const isAuthenticated = useCallback(() => !isNil(authDetails), [authDetails]);
+  const isAuthenticated = useCallback(
+    () => !isNil(accessToken) && !isEmpty(accessToken),
+    [accessToken]
+  );
+
+  const updateRefreshToken = (refreshToken: string) => {
+    const authDetails = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
+    if (authDetails?.userDetails?.refreshToken) {
+      authDetails.userDetails.refreshToken = refreshToken;
+      SessionStorage.set(AUTH_DETAILS, authDetails);
+      return;
+    }
+    console.error("Failed to update refreshToken");
+  };
 
   return (
     <AuthContext.Provider
@@ -142,12 +158,12 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
         role,
         isAuthLoading,
         authDetails,
+        getCurrentUser,
         login,
         isAuthenticated,
         logout,
         signUp,
         accessToken,
-        refreshToken,
       }}>
       {children}
     </AuthContext.Provider>

@@ -2,24 +2,24 @@ import {MenuProps} from "antd";
 
 export interface UserDetails {
   $id: string;
-  dob: any;
+  dob: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
   address: string;
   sex: boolean;
   status: number;
-  avatarUrl: any;
+  avatarUrl: string;
   isConfirmEmail: boolean;
   isActive: boolean;
   createAt: string;
-  updateAt: any;
+  updateAt: string;
   refreshToken: string;
   dateExpireRefreshToken: string;
-  dentist: any;
-  clinicDentals: any;
-  appointments: any;
-  appointmentNotifications: any;
+  dentist: Dentist;
+  clinicDentals: ClinicDetail;
+  appointments: Appointment[];
+  appointmentNotifications: AppointmentNotification[];
   id: string;
   userName: string;
   normalizedUserName: string;
@@ -31,7 +31,7 @@ export interface UserDetails {
   concurrencyStamp: string;
   phoneNumberConfirmed: boolean;
   twoFactorEnabled: boolean;
-  lockoutEnd: any;
+  lockoutEnd: string;
   lockoutEnabled: boolean;
   accessFailedCount: number;
 }
@@ -113,9 +113,9 @@ export interface Appointment {
   type: string
   periodicInterval: number
   status: number
-  note: any
+  note: string
   createAt: string
-  updateAt: any
+  updateAt: string
 }
 
 

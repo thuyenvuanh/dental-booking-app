@@ -4,16 +4,45 @@ import {
   PhoneOutlined,
   FieldStringOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Input, Radio } from "antd";
+import { Button, DatePicker, Form, Input, Radio } from "antd";
 import { defaultSignUpForm } from "../../constants/default";
 import { useAuth } from "../../hooks/authHooks/useAuth";
 import { SignUpForm } from "../../type";
+import { useNotification } from "../../hooks/notificationHooks/useNotification";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm: React.FC = () => {
-  const { signUp } = useAuth();
+  const { signUp, getCurrentUser } = useAuth();
+  const { notify } = useNotification();
+  const navigate = useNavigate();
 
   const handleSignUp = (signUpForm: SignUpForm) => {
-    signUp(signUpForm);
+    signUp(signUpForm)
+      .then(() => {
+        notify.success({ message: "Đăng ký thành công. Đang đăng nhập..." });
+        setTimeout(() => {
+          getCurrentUser()
+            .then((_) => {
+              notify.success({
+                message: "Thành công. Chuyển hướng về trang chủ",
+              });
+              setTimeout(() => {
+                navigate("/");
+              }, 500);
+            })
+            .catch((e) => {
+              notify.error({
+                message:
+                  "Lấy thông tin user không thành công. Vui lòng đăng nhập",
+              });
+              console.error(e);
+            });
+        }, 500);
+      })
+      .catch((e) => {
+        console.error(e);
+        notify.error({ message: "Đăng kí không thành công" });
+      });
   };
 
   return (
@@ -62,7 +91,7 @@ const RegisterForm: React.FC = () => {
         <Input placeholder="Email" prefix={<UserOutlined />} />
       </Form.Item>
       <Form.Item
-        name="username"
+        name="userName"
         rules={[
           {
             required: true,
@@ -82,7 +111,7 @@ const RegisterForm: React.FC = () => {
             message: "Thông tin bắt buộc",
           },
         ]}>
-        <Input.Password placeholder="Password" prefix={<LockOutlined />} />
+        <Input.Password placeholder="Mật khẩu" prefix={<LockOutlined />} />
       </Form.Item>
       <Form.Item
         name="rePassword"
@@ -96,14 +125,12 @@ const RegisterForm: React.FC = () => {
               if (!value || getFieldValue("password") === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(
-                new Error("The new password that you entered do not match!")
-              );
+              return Promise.reject(new Error("Mật khẩu không trùng khớp"));
             },
           }),
         ]}>
         <Input.Password
-          placeholder="Confirm password"
+          placeholder="Nhập lại mật khẩu"
           prefix={<LockOutlined />}
         />
       </Form.Item>
@@ -123,7 +150,7 @@ const RegisterForm: React.FC = () => {
             message: "10-12 digits phone number",
           },
         ]}>
-        <Input placeholder="Phone number" prefix={<PhoneOutlined />} />
+        <Input placeholder="Số điện thoại" prefix={<PhoneOutlined />} />
       </Form.Item>
       <Form.Item
         name="address"
@@ -136,10 +163,23 @@ const RegisterForm: React.FC = () => {
             type: "string",
           },
         ]}>
-        <Input.TextArea placeholder="Address" />
+        <Input.TextArea placeholder="Địa chỉ" />
       </Form.Item>
       <Form.Item
-        label="Gender"
+        name="dob"
+        rules={[
+          {
+            required: true,
+            message: "Thông tin bắt buộc",
+          },
+          {
+            type: "date",
+          },
+        ]}>
+        <DatePicker style={{ width: "100%" }} />
+      </Form.Item>
+      <Form.Item
+        label="Giới tính"
         name="sex"
         rules={[
           {
@@ -148,13 +188,13 @@ const RegisterForm: React.FC = () => {
           },
         ]}>
         <Radio.Group>
-          <Radio value={true}>Male</Radio>
-          <Radio value={false}>Female</Radio>
+          <Radio value={true}>Nam</Radio>
+          <Radio value={false}>Nữ</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item>
         <Button htmlType="submit" type="primary" style={{ width: "100%" }}>
-          Login
+          Đăng ký
         </Button>
       </Form.Item>
     </Form>

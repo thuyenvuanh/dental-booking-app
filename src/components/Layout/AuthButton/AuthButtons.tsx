@@ -5,11 +5,11 @@ const AuthButtons: React.FC = () => {
   return (
     <Space className="auth">
       <Button>
-        <Link to={"/login"}>Login</Link>
+        <Link to={"/login"}>Đăng nhập</Link>
       </Button>
       <Button type="primary">
         <Link to={"/login?register=true"} style={{ color: "white" }}>
-          Register
+          Đăng ký
         </Link>
       </Button>
     </Space>

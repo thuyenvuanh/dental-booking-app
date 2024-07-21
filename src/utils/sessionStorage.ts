@@ -3,7 +3,7 @@ import {isNil} from "lodash";
 export class SessionStorage {
     static set = (key: string, value: object): string => {
         const encodedJson = JSON.stringify(value);
-        window.localStorage.setItem(key, encodedJson);
+        window.sessionStorage.setItem(key, encodedJson);
         return encodedJson;
     };
 

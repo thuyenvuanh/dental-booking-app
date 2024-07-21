@@ -4,7 +4,7 @@ import { Appointment } from "../type";
 export const listAppointmentApi = async (
   userId: string
 ): Promise<Appointment[]> => {
-  var response = await axios.get("/appointment/getByUserId", {
+  const response = await axios.get("/appointment/getByUserId", {
     params: { userId },
   });
   return response.data.$values as Appointment[];
@@ -13,6 +13,6 @@ export const listAppointmentApi = async (
 export const appointmentById = async (
   appointmentId: string
 ): Promise<Appointment> => {
-  var response = await axios.get(`/appointment/getById/${appointmentId}`);
+  const response = await axios.get(`/appointment/getById/${appointmentId}`);
   return response.data as Appointment;
 };
