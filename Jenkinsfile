@@ -22,6 +22,15 @@ pipeline {
         )
     }
     stages {
+        stage('Validate inputs') {
+            steps {
+                sh '''
+                    if [ {params.Deploy} -ne true -a {params.BUILD_NUM} ]; then
+                        echo "BUILD_NUMB is required when deploy"
+                    fi
+                '''
+            }
+        }
         stage('Build dental-booking-app') {
             when{
                 expression {
@@ -29,15 +38,7 @@ pipeline {
                 }
             }
             steps {
-                sh """
-                    docker build -t dental-booking-app:${env.BUILD_NUMBER} .
-                """
-                script {
-                    currentBuild.description = "image_id -> dental-booking-app:" + sh(
-                            script: "docker image ls | grep dental-booking-app | grep ${env.BUILD_NUMBER} | awk \'{print \$2}\'",
-                            returnStdout: true
-                    ).trim()
-                }
+                sh "docker build -t dental-booking-app:${env.BUILD_NUMBER} ."
             }
         }
         stage('Deploy') {
@@ -68,6 +69,12 @@ pipeline {
             }
             steps {
                 build job: 'remove-docker-image', parameters: [string(name: 'IMAGE_NAME', value: 'dental-booking-app'), string(name: 'BUILD_NUM', value: "${params.BUILD_NUM}")]
+                script {
+                    currentBuild.description = "image_id -> dental-booking-app:" + sh(
+                            script: "docker image ls | grep dental-booking-app | grep ${env.BUILD_NUMBER} | awk \'{print \$2}\'",
+                            returnStdout: true
+                    ).trim()
+                }
             }
         }
     }
