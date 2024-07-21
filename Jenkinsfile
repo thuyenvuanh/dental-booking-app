@@ -67,7 +67,7 @@ pipeline {
                 }
             }
             steps {
-                build job: 'remove-docker-image', parameters: [string(name: 'IMAGE_NAME', value: 'dental-booking-app'), string(name: 'BUILD_NUM', value: "${env.BUILD_NUMBER}")]
+                build job: 'remove-docker-image', parameters: [string(name: 'IMAGE_NAME', value: 'dental-booking-app'), string(name: 'BUILD_NUM', value: "${params.BUILD_NUM}")]
             }
         }
     }
