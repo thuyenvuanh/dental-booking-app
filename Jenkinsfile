@@ -29,12 +29,12 @@ pipeline {
                 }
             }
             steps {
-                sh '''
-                    if [ {params.Deploy} == true -a -z {params.BUILD_NUM} ]; then
+                sh """
+                    if [ ${params.Deploy} == true -a  -z ${params.BUILD_NUM} ]; then
                         echo "BUILD_NUMB is required when deploy"
                         exit -1;
                     fi
-                '''
+                """
             }
         }
         stage('Build dental-booking-app') {

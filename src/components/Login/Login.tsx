@@ -41,8 +41,8 @@ const Login: React.FC = () => {
               animated
               activeKey={authType}
               onChange={(activeKey) => setAuthType(activeKey)}>
-              <Tabs.TabPane key={"login"} tab={"Login"} />
-              <Tabs.TabPane key={"register"} tab={"Register"} />
+              <Tabs.TabPane key={"login"} tab={"Đăng nhập"} />
+              <Tabs.TabPane key={"register"} tab={"Đăng kí"} />
             </Tabs>
             {authType === "login" && <LoginForm />}
             {authType === "register" && <RegisterForm />}
