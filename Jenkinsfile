@@ -27,6 +27,7 @@ pipeline {
                 sh '''
                     if [ {params.Deploy} -ne true -a {params.BUILD_NUM} ]; then
                         echo "BUILD_NUMB is required when deploy"
+                        exit -1;
                     fi
                 '''
             }
