@@ -76,7 +76,7 @@ const LoginForm: React.FC = () => {
             message: "Thông tin bắt buộc",
           },
         ]}>
-        <Input.Password placeholder="Password" prefix={<LockOutlined />} />
+        <Input.Password placeholder="Mật khẩu" prefix={<LockOutlined />} />
       </Form.Item>
       <Form.Item name="remember" valuePropName="checked">
         <Checkbox>Ghi nhớ username</Checkbox>

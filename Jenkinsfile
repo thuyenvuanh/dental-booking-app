@@ -23,9 +23,14 @@ pipeline {
     }
     stages {
         stage('Validate inputs') {
+            when {
+                expression {
+                    return params.Deploy
+                }
+            }
             steps {
                 sh '''
-                    if [ {params.Deploy} -ne true -a {params.BUILD_NUM} ]; then
+                    if [ {params.Deploy} == true -a -z {params.BUILD_NUM} ]; then
                         echo "BUILD_NUMB is required when deploy"
                         exit -1;
                     fi
