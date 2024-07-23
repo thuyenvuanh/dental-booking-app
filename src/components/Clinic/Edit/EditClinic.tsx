@@ -1,6 +1,6 @@
 interface EditClinicPageProps {}
 
-const EditClinicPage: React.FC<EditClinicPageProps> = (props) => {
+const EditClinicPage: React.FC<EditClinicPageProps> = (_) => {
   return <></>;
 };
 

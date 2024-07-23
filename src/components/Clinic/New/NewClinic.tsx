@@ -19,7 +19,7 @@ import dayjs from "dayjs";
 
 interface NewClinicPageProps {}
 
-const NewClinicPage: React.FC<NewClinicPageProps> = (props) => {
+const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { authDetails } = useAuth();
@@ -61,7 +61,7 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (props) => {
       onwerId: authDetails?.userDetails?.id,
     } as ClinicDetail;
     data = omit(data, "openCloseTime");
-    var result = createNewClinicApi(data);
+    createNewClinicApi(data);
   }
 
   return (

@@ -3,13 +3,13 @@ import { Flex, Typography, Button, List, Avatar } from "antd";
 import routes from "../../constants/routes";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ClinicDetail, Dentist, LocationData } from "../../type";
+import { ClinicDetail, LocationData } from "../../type";
 import { useNotification } from "../../hooks/notificationHooks/useNotification";
 import { getClinicListApi } from "../../services/clinic";
 
 interface ClinicViewPageProps {}
 
-const ClinicViewPage: React.FC<ClinicViewPageProps> = (props) => {
+const ClinicViewPage: React.FC<ClinicViewPageProps> = (_) => {
   const [clinics, setClinics] = useState<ClinicDetail[]>([]);
   const { message } = useNotification();
   const navigate = useNavigate();

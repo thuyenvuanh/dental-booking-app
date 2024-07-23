@@ -1,4 +1,4 @@
-import { AuthDetails, HookProps, SignUpForm, UserDetails } from "../../type.ts";
+import { AuthDetails, HookProps, SignUpForm } from "../../type.ts";
 import { LoginFormProps } from "../../components/LoginForm/LoginForm.tsx";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { isEmpty, isNil } from "lodash";
