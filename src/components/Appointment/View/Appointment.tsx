@@ -11,7 +11,7 @@ const AppointmentView: React.FC = () => {
   const navigate = useNavigate();
   const { authDetails } = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const { notify } = useNotification();
+  const { notification } = useNotification();
 
   function getAppointments() {
     listAppointmentApi(authDetails?.userDetails?.id!)
@@ -20,7 +20,7 @@ const AppointmentView: React.FC = () => {
       })
       .catch((e) => {
         console.error(e);
-        notify.error({ message: "failed to get appointments" });
+        notification.error({ message: "failed to get appointments" });
       });
   }
 

@@ -11,25 +11,25 @@ import { useEffect, useState } from "react";
 import { useNotification } from "../../hooks/notificationHooks/useNotification.tsx";
 
 const UserAvatar = () => {
-  const { logout, role } = useAuth();
+  const { logout, role, isAuthLoading } = useAuth();
   const [items, setItems] = useState<MenuProps["items"]>([]);
-  const { notify } = useNotification();
+  const { message } = useNotification();
   const logoff: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
     logout().then(() => {
-      notify.success({ message: "Đăng xuất thành công" });
+      message.success({ content: "Đăng xuất thành công" });
     });
   };
 
   const customerItems: MenuProps["items"] = [
     {
       key: "1",
-      label: <Link to={routes.USER.HOME}>View Appointments</Link>,
+      label: <Link to={routes.USER.HOME}>Lịch hẹn</Link>,
       icon: <CalendarOutlined />,
     },
     {
       key: "2",
-      label: <a onClick={logoff}>Logout</a>,
+      label: <a onClick={logoff}>Đăng xuất</a>,
       icon: <LogoutOutlined />,
     },
   ];
@@ -37,29 +37,34 @@ const UserAvatar = () => {
   const adminItems: MenuProps["items"] = [
     {
       key: "1",
-      label: <Link to={routes.ADMINISTRATOR.HOME}>Settings</Link>,
+      label: <Link to={routes.ADMINISTRATOR.HOME}>Quản lý</Link>,
       icon: <SettingOutlined />,
     },
     {
       key: "2",
-      label: <a onClick={logoff}>Logout</a>,
+      label: <a onClick={logoff}>Đăng xuất</a>,
       icon: <LogoutOutlined />,
     },
   ];
 
   useEffect(() => {
+    if (isAuthLoading) {
+      return;
+    }
     switch (role) {
       case "CUSTOMER":
+        console.log("CUSTOMER");
         setItems(customerItems);
         break;
       case "ADMINISTRATOR":
+        console.log("ADMINISTRATOR");
         setItems(adminItems);
         break;
       default:
         console.error(`Unknown role ${role}`);
         break;
     }
-  }, [role]);
+  }, [role, isAuthLoading]);
 
   return (
     <Dropdown menu={{ items: items }} placement="bottomRight">

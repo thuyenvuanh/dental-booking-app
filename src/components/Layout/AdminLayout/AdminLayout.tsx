@@ -6,7 +6,7 @@ import { useLocation, useNavigate, Link, Outlet } from "react-router-dom";
 import routes from "../../../constants/routes";
 import { adminLayoutItems } from "../../../constants/userMenu";
 import { useAuth } from "../../../hooks/authHooks/useAuth";
-import { AuthStateLocation } from "../../../type";
+import { LocationData } from "../../../type";
 import UserAvatar from "../../UserAvatar/UserAvatar";
 import AuthButtons from "../AuthButton/AuthButtons";
 import { BgGrey } from "../AdminLayout/AdminLayout.style";
@@ -41,7 +41,7 @@ const AdminLayout: React.FC = () => {
           type: "error",
           message: "Đã đăng xuất",
           description: `Phiên làm việc đã hết hạn, vui lòng đăng nhập lại`,
-        } as AuthStateLocation,
+        } as LocationData,
       });
     } else {
       setIsLoading(false);

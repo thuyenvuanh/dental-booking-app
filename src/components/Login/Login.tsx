@@ -6,7 +6,7 @@ import LoginForm from "../LoginForm/LoginForm";
 import RegisterForm from "../RegisterForm/RegisterForm";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { isEmpty, isNil } from "lodash";
-import { AuthStateLocation } from "../../type.ts";
+import { LocationData } from "../../type.ts";
 import { useNotification } from "../../hooks/notificationHooks/useNotification.tsx";
 
 const Login: React.FC = () => {
@@ -14,14 +14,14 @@ const Login: React.FC = () => {
   const [authType, setAuthType] = useState<string>(
     isNil(searchParams.get("register")) ? "login" : "register"
   );
-  const { notify } = useNotification();
-  const authStateLocation = useLocation().state as AuthStateLocation;
+  const { notification } = useNotification();
+  const authStateLocation = useLocation().state as LocationData;
 
   useEffect(() => {
     if (!isNil(authStateLocation) && !isEmpty(authStateLocation.type)) {
       try {
         const { type, message, description } = authStateLocation;
-        notify.open({ type, message, description });
+        notification.open({ type, message, description });
       } catch {
         console.error(`Cannot show notification`);
       }

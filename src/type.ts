@@ -36,10 +36,11 @@ export interface UserDetails {
   accessFailedCount: number;
 }
 
-export interface AuthStateLocation {
-  type: "success" | "info" | "error" | "warning";
-  message: string;
-  description: string;
+export interface LocationData {
+  type?: "success" | "info" | "error" | "warning";
+  message?: string;
+  description?: string;
+  data?: object;
 }
 
 export type MenuItem = Required<MenuProps>["items"][number];
@@ -64,34 +65,34 @@ export interface AuthDetails {
 }
 
 export interface Dentist {
-    id: string;
-    description: string;
-    licenseNumber: string;
-    yearOfExperience: number;
-    status: number;
-    createAt: Date;
-    updateAt: Date;
-    clinicDentalId: number;
-    clinicDental: ClinicDetail;
-    appointments: Appointment[];
+  id: string;
+  description: string;
+  licenseNumber: string;
+  yearOfExperience: number;
+  status: number;
+  createAt: Date;
+  updateAt: Date;
+  clinicDentalId: number;
+  clinicDental: ClinicDetail;
+  appointments: Appointment[];
 }
 
 export interface ClinicDetail {
-    id: string;
-    name: string;
-    address: string;
-    openTime: string;
-    closeTime: string;
-    slotDuration: number;
-    maxPatientsPerSlot: number;
-    maxTreatmentPerSlot: number;
-    status: number;
-    createAt: Date;
-    updateAt: Date;
-    onwerId: string;
-    user: ApplicationUser;
-    appointments: Appointment[];
-    dentists: Dentist[];
+  id: string;
+  name: string;
+  address: string;
+  openTime: string;
+  closeTime: string;
+  slotDuration: number;
+  maxPatientsPerSlot: number;
+  maxTreatmentPerSlot: number;
+  status: number;
+  createAt: Date;
+  updateAt: Date;
+  onwerId: string;
+  user?: ApplicationUser;
+  appointments: Appointment[];
+  dentists: Dentist[];
 }
 
 export interface AppointmentNotification {

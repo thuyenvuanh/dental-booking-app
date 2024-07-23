@@ -5,12 +5,12 @@ export const userLayoutItems: MenuItem[] = [
   {
     key: "/apmt",
     icon: <CalendarOutlined />,
-    label: "Appointments",
+    label: "Lịch hẹn",
   },
   {
     key: "/settings",
     icon: <SettingOutlined />,
-    label: "Account Settings",
+    label: "Quản lý tài khoản",
     children: [{ key: "/account/settings", label: "Accounts" }],
   },
 ];
@@ -19,6 +19,11 @@ export const adminLayoutItems: MenuItem[] = [
   {
     key: "/dentist",
     icon: <i className="fa-solid fa-user-doctor"></i>,
-    label: "Dentist",
+    label: "Nha sĩ",
+  },
+  {
+    key: "/clinic",
+    icon: <i className="fa-solid fa-house-chimney-medical"></i>,
+    label: "Phòng khám",
   },
 ];

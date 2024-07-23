@@ -9,7 +9,7 @@ import VirtualList from "rc-virtual-list";
 const FormByDentist = () => {
   const { currentStep, setCurrentStep } = useNewAppointmentContext();
   const [dentists, setDentists] = useState<Dentist[]>([]);
-  const { notify } = useNotification();
+  const { notification } = useNotification();
 
   useEffect(() => {
     listDentistsApi()
@@ -18,7 +18,7 @@ const FormByDentist = () => {
       })
       .catch((e) => {
         console.log(e);
-        notify.error({ message: "Failed to get dentist list" });
+        notification.error({ message: "Failed to get dentist list" });
       });
   }, []);
 

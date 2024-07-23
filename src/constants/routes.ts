@@ -12,6 +12,16 @@ const routes = {
   },
   ADMINISTRATOR: {
     HOME: "/dentist",
+    DENTIST: {
+      VIEW: "/dentist",
+      NEW: "/dentist/create",
+      EDIT: "/dentist/edit",
+    },
+    CLINIC: {
+      VIEW: "/clinic",
+      NEW: "/clinic/create",
+      EDIT: "/clinic/edit",
+    },
   },
 };
 

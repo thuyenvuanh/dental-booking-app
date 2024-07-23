@@ -1,4 +1,4 @@
-import { AuthDetails, HookProps, SignUpForm } from "../../type.ts";
+import { AuthDetails, HookProps, SignUpForm, UserDetails } from "../../type.ts";
 import { LoginFormProps } from "../../components/LoginForm/LoginForm.tsx";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { isEmpty, isNil } from "lodash";
@@ -39,28 +39,30 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   const [role, setRole] = useState<ROLE>("GUEST");
   const [accessToken, setAccessToken] = useState("");
   const [injectAuth, setInjectAuth] = useState(-1);
-  const { notify } = useNotification();
+  const { message } = useNotification();
   useEffect(() => {
     const loggedInUser = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
-    if (!isNil(loggedInUser) && !isEmpty(loggedInUser)) {
+    if (
+      !isNil(loggedInUser) &&
+      !isEmpty(loggedInUser) &&
+      loggedInUser?.userDetails?.refreshToken
+    ) {
       setAuthDetails(loggedInUser);
       setTimeout(() => {
-        if (loggedInUser?.userDetails?.refreshToken) {
-          refreshTokenApi(loggedInUser)
-            .then((authToken) => {
-              setAccessToken(authToken.token);
-              updateRefreshToken(authToken.refreshToken);
-              notify.success({
-                message: "Session recovered successfully",
-              });
-            })
-            .catch((error) => {
-              logout();
-              console.error(error);
-              notify.warning({ message: "You have been logged out" });
-            })
-            .finally(() => setIsAuthLoading(false));
-        }
+        refreshTokenApi(loggedInUser)
+          .then((authToken) => {
+            setAccessToken(authToken.token);
+            getRole(authToken.token);
+            updateRefreshToken(authToken.refreshToken);
+          })
+          .catch((error) => {
+            logout();
+            console.error(error);
+            message.warning({
+              content: "Đã hết thời gian chờ phiên. Vui lòng đăng nhập lại",
+            });
+          })
+          .finally(() => setIsAuthLoading(false));
       }, 500);
       return;
     }
@@ -68,13 +70,34 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!isEmpty(accessToken)) {
-      //config roles
-      //FIXME - role should be get from currentUser api
+    // cannot get accessToken after init
+    // remove authDetails in session
+    const userDetailsInSession = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
+    if (
+      isEmpty(accessToken) &&
+      !isAuthLoading &&
+      !isNil(userDetailsInSession)
+    ) {
+      SessionStorage.clearAll();
+      setAuthDetails(null);
+    }
+  }, [accessToken, isAuthLoading]);
+
+  const getRole = useCallback(
+    (accessToken: string) => {
       const role = (
         parseJwt(accessToken)[ROLE_KEY] as string
       ).toUpperCase() as ROLE;
       setRole(role);
+    },
+    [accessToken]
+  );
+
+  useEffect(() => {
+    if (!isEmpty(accessToken)) {
+      //config roles
+      //FIXME - role should be get from currentUser api
+      getRole(accessToken);
       //FIXME - end
 
       const injectAuth = axios.interceptors.request.use((config) => ({

@@ -18,7 +18,7 @@ const LoginForm: React.FC = () => {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const navigate = useNavigate();
 
-  const { notify } = useNotification();
+  const { notification, message } = useNotification();
 
   const initialValue: LoginFormProps = {
     username: getCookie(REMEMBER_USERNAME_COOKIE) ?? "",
@@ -33,20 +33,22 @@ const LoginForm: React.FC = () => {
         setTimeout(() => {
           getCurrentUser()
             .then((_) => {
-              notify.success({ message: "Đăng nhập thành công" });
+              message.success({ content: "Đăng nhập thành công" });
               setTimeout(() => {
-                setCookie(REMEMBER_USERNAME_COOKIE, user.username, 365);
+                if (user.remember) {
+                  setCookie(REMEMBER_USERNAME_COOKIE, user.username, 365);
+                }
                 navigate("/");
-              }, 500);
+              }, 1000);
             })
             .catch((e) => {
-              notify.error({ message: "Lỗi lấy thông tin người dùng" });
+              notification.error({ message: "Lỗi lấy thông tin người dùng" });
               console.error(e);
             });
         }, 500);
       })
       .catch((e) => {
-        notify.error({ message: `Tài khoản hoặc mật khẩu không đúng` });
+        notification.error({ message: `Tài khoản hoặc mật khẩu không đúng` });
         console.error(e);
         logout();
       })

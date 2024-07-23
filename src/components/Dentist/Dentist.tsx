@@ -1,16 +1,17 @@
 import { Avatar, Button, Flex, List, Typography } from "antd";
 import { FunctionComponent, useEffect, useState } from "react";
 import { listDentistsApi } from "../../services/dentist";
-import { Dentist } from "../../type";
+import { LocationData, Dentist } from "../../type";
 import { useNotification } from "../../hooks/notificationHooks/useNotification";
 import { useNavigate } from "react-router-dom";
 import { EditOutlined } from "@ant-design/icons";
+import routes from "../../constants/routes";
 
 interface DentistPageProps {}
 
 const DentistPage: FunctionComponent<DentistPageProps> = () => {
   const [dentists, setDentists] = useState<Dentist[]>([]);
-  const { notify } = useNotification();
+  const { notification } = useNotification();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,20 +22,25 @@ const DentistPage: FunctionComponent<DentistPageProps> = () => {
       })
       .catch((e) => {
         console.log(e);
-        notify.error({ message: "Failed to get dentist list" });
+        notification.error({ message: "Failed to get dentist list" });
       })
       .finally(() => setIsLoading(false));
   }, []);
 
   const handleStartEdit = (dentist: Dentist) => {
-    console.log(dentist);
+    navigate(routes.ADMINISTRATOR.DENTIST.EDIT, {
+      replace: true,
+      state: { data: dentist } as LocationData,
+    });
   };
 
   return (
     <>
       <Flex align="center" justify="space-between">
         <Typography.Title>Danh sách</Typography.Title>
-        <Button type="primary" onClick={() => navigate("/dentist/new")}>
+        <Button
+          type="primary"
+          onClick={() => navigate(routes.ADMINISTRATOR.DENTIST.NEW)}>
           Thêm nha sĩ
         </Button>
       </Flex>
@@ -57,7 +63,7 @@ const DentistPage: FunctionComponent<DentistPageProps> = () => {
                 type="text"
                 icon={<EditOutlined />}
                 onClick={() => handleStartEdit(dentist)}>
-                Edit
+                Chỉnh sửa
               </Button>,
             ]}
             extra={

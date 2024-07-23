@@ -23,6 +23,7 @@ import { listClinicDentalApi } from "../../../services/clinicDental";
 import { ClinicDetail } from "../../../type";
 import { useForm } from "antd/es/form/Form";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../../hooks/notificationHooks/useNotification";
 
 interface NewDentistPageProps {}
 
@@ -31,6 +32,7 @@ const NewDentistPage: React.FC<NewDentistPageProps> = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [form] = useForm();
   const navigate = useNavigate();
+  const { modal } = useNotification();
   useEffect(() => {
     fetchApis().finally(() => setIsLoading(false));
   }, []);
@@ -41,10 +43,29 @@ const NewDentistPage: React.FC<NewDentistPageProps> = () => {
 
   const handleCancel = () => {
     if (form.isFieldsTouched(Object.keys(defaultNewDentist), false)) {
-      const result = confirm("You sure want to cancel?");
-      if (!result) return;
+      modal
+        .confirm({
+          title: "Hủy tạo",
+          content: (
+            <p>
+              Thông tin bác sĩ này <b>chưa được lưu xuống hệ thống.</b> Bạn có
+              muốn hủy thay đổi?
+              <hr />
+              Xác nhận hủy sẽ trở lại trang danh sách.
+            </p>
+          ),
+          centered: true,
+          okText: "Xác nhận",
+          okType: "danger",
+          cancelText: "Trở lại",
+        })
+        .then(
+          (confirmed) => confirmed && navigate("/dentist"),
+          () => {}
+        );
+    } else {
+      navigate("/dentist");
     }
-    navigate("/dentist");
   };
 
   if (isLoading) {

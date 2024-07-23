@@ -5,7 +5,7 @@ import {useAuth} from "../../../hooks/authHooks/useAuth.tsx";
 import AuthButtons from "../AuthButton/AuthButtons";
 import {useCallback, useEffect, useState} from "react";
 import routes from "../../../constants/routes";
-import {AuthStateLocation} from "../../../type.ts";
+import { LocationData } from "../../../type.ts";
 import { userLayoutItems } from "../../../constants/userMenu";
 import { BgGrey } from "./UserLayout.style";
 
@@ -57,7 +57,7 @@ const UserLayout: React.FC = () => {
           type: "error",
           message: "Đã đăng xuất",
           description: `Phiên làm việc đã hết hạn, vui lòng đăng nhập lại`,
-        } as AuthStateLocation,
+        } as LocationData,
       });
     }
   }, [isAuthenticated]);

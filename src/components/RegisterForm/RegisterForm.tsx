@@ -13,17 +13,17 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterForm: React.FC = () => {
   const { signUp, getCurrentUser } = useAuth();
-  const { notify } = useNotification();
+  const { notification } = useNotification();
   const navigate = useNavigate();
 
   const handleSignUp = (signUpForm: SignUpForm) => {
     signUp(signUpForm)
       .then(() => {
-        notify.success({ message: "Đăng ký thành công. Đang đăng nhập..." });
+        notification.success({ message: "Đăng ký thành công. Đang đăng nhập..." });
         setTimeout(() => {
           getCurrentUser()
             .then((_) => {
-              notify.success({
+              notification.success({
                 message: "Thành công. Chuyển hướng về trang chủ",
               });
               setTimeout(() => {
@@ -31,7 +31,7 @@ const RegisterForm: React.FC = () => {
               }, 500);
             })
             .catch((e) => {
-              notify.error({
+              notification.error({
                 message:
                   "Lấy thông tin user không thành công. Vui lòng đăng nhập",
               });
@@ -41,7 +41,7 @@ const RegisterForm: React.FC = () => {
       })
       .catch((e) => {
         console.error(e);
-        notify.error({ message: "Đăng kí không thành công" });
+        notification.error({ message: "Đăng kí không thành công" });
       });
   };
 

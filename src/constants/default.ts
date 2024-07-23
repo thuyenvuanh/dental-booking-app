@@ -1,4 +1,4 @@
-import { SignUpForm } from "../type";
+import { ClinicDetail, SignUpForm } from "../type";
 
 export const AUTH_DETAILS = "authDetails";
 export const defaultSignUpForm: SignUpForm = {
@@ -31,6 +31,22 @@ export const defaultNewDentist = {
   yearOfExperience: "",
   licenseNumber: "",
   clinicDentalId: "",
+};
+
+export const defaultNewClinic = {
+  id: "",
+  name: "",
+  address: "",
+  openCloseTime: ["", ""],
+  slotDuration: 15,
+  maxPatientsPerSlot: 1,
+  maxTreatmentPerSlot: 1,
+  status: 0,
+  createAt: new Date(),
+  updateAt: new Date(),
+  onwerId: "",
+  appointments: [],
+  dentists: [],
 };
 
 export const ROLE_KEY =

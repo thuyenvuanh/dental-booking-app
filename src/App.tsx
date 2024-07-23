@@ -6,15 +6,20 @@ import { App as AntApp, ConfigProvider } from "antd";
 import { themeConfig } from "./constants/theme";
 import Home from "./components/Home/Home";
 import UserLayout from "./components/Layout/UserLayout/UserLayout";
-import AppointmentView from "./components/Appointment/View/View.tsx";
+import AppointmentView from "./components/Appointment/View/Appointment.tsx";
 import React, { useEffect } from "react";
 import axios from "axios";
-import NewAppointment from "./components/Appointment/New/New.tsx";
+import NewAppointment from "./components/Appointment/New/NewAppointment.tsx";
 import { NotificationProvider } from "./hooks/notificationHooks/notificationHook.tsx";
 import AdminLayout from "./components/Layout/AdminLayout/AdminLayout.tsx";
 import DentistPage from "./components/Dentist/Dentist.tsx";
-import NewDentistPage from "./components/Dentist/New/New.tsx";
+import NewDentistPage from "./components/Dentist/New/NewDentist.tsx";
 import ScrollToTop from "./utils/ScrollToTop.tsx";
+import routes from "./constants/routes.ts";
+import EditDentistPage from "./components/Dentist/Edit/EditDentist.tsx";
+import ClinicViewPage from "./components/Clinic/Clinic.tsx";
+import NewClinicPage from "./components/Clinic/New/NewClinic.tsx";
+import EditClinicPage from "./components/Clinic/Edit/EditClinic.tsx";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -34,19 +39,45 @@ const App: React.FC = () => {
             <BrowserRouter>
               <ScrollToTop />
               <Routes>
-                <Route path="/login" Component={Login} />
+                <Route path={routes.LOGIN} Component={Login} />
                 <Route element={<LandingLayout />}>
-                  <Route path="/" Component={Home} />
-                  <Route path="/dentists" element={<>Dentists</>} />
-                  <Route path="/book" element={<>Booking</>} />
+                  <Route path={routes.GUEST.HOME} Component={Home} />
                 </Route>
                 <Route Component={UserLayout}>
-                  <Route path="/apmt" Component={AppointmentView} />
-                  <Route path="/apmt/new" Component={NewAppointment} />
+                  <Route
+                    path={routes.USER.APPOINTMENT.VIEW}
+                    Component={AppointmentView}
+                  />
+                  <Route
+                    path={routes.USER.APPOINTMENT.CREATE}
+                    Component={NewAppointment}
+                  />
                 </Route>
                 <Route Component={AdminLayout}>
-                  <Route path="/dentist" Component={DentistPage} />
-                  <Route path="/dentist/new" Component={NewDentistPage} />
+                  <Route
+                    path={routes.ADMINISTRATOR.DENTIST.VIEW}
+                    Component={DentistPage}
+                  />
+                  <Route
+                    path={routes.ADMINISTRATOR.DENTIST.NEW}
+                    Component={NewDentistPage}
+                  />
+                  <Route
+                    path={routes.ADMINISTRATOR.DENTIST.EDIT}
+                    Component={EditDentistPage}
+                  />
+                  <Route
+                    path={routes.ADMINISTRATOR.CLINIC.VIEW}
+                    Component={ClinicViewPage}
+                  />
+                  <Route
+                    path={routes.ADMINISTRATOR.CLINIC.NEW}
+                    Component={NewClinicPage}
+                  />
+                  <Route
+                    path={routes.ADMINISTRATOR.CLINIC.EDIT}
+                    Component={EditClinicPage}
+                  />
                 </Route>
                 <Route path="*" element={<>404 Not Found</>} />
               </Routes>
