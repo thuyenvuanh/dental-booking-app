@@ -16,6 +16,7 @@ import { omit } from "lodash";
 import { createNewClinicApi } from "../../../services/clinic";
 import { useAuth } from "../../../hooks/authHooks/useAuth";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 
 interface NewClinicPageProps {}
 
@@ -24,6 +25,14 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
   const navigate = useNavigate();
   const { authDetails } = useAuth();
   const { modal } = useNotification();
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault();
+      alert("navigating");
+      return;
+    });
+  }, []);
 
   const handleCancel = () => {
     if (form.isFieldsTouched(Object.keys(defaultNewClinic), false)) {
@@ -124,7 +133,7 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
               message: "Yêu cầu số",
             },
           ]}>
-          <InputNumber suffix="phút" min={15} max={120} />
+          <InputNumber suffix="phút" min={15} max={120} defaultValue={15} />
         </Form.Item>
         <Form.Item
           name="maxPatientsPerSlot"
@@ -140,7 +149,7 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
             },
           ]}>
           <Flex style={{ display: "inline" }}>
-            <InputNumber min={1} max={10} />
+            <InputNumber min={1} max={10} defaultValue={1} />
             <span style={{ marginLeft: "8px" }}>Bệnh nhân</span>
           </Flex>
         </Form.Item>
@@ -158,7 +167,7 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
             },
           ]}>
           <Flex style={{ display: "inline" }}>
-            <InputNumber min={1} max={10} />
+            <InputNumber min={1} max={10} defaultValue={1} />
             <span style={{ marginLeft: "8px" }}>treatments</span>
           </Flex>
         </Form.Item>

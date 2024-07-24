@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LoginFormProps } from "../components/LoginForm/LoginForm";
-import { AuthDetails, AuthToken, SignUpForm } from "../type";
+import { AuthToken, SignUpForm } from "../type";
 import { omit } from "lodash";
 
 export const loginApi = async (user: LoginFormProps): Promise<AuthToken> => {
@@ -18,12 +18,12 @@ export const currentUserApi = async () => {
   return response.data.user;
 };
 
-export const refreshTokenApi = async (user: AuthDetails) => {
+export const refreshTokenApi = async (data: {
+  refreshToken: string;
+  userId: string;
+}) => {
   const response = await axios.post("/auth/refresh-token", null, {
-    params: {
-      refreshToken: user.userDetails?.refreshToken,
-      userId: user.userDetails?.id,
-    },
+    params: data,
   });
   return response.data as { token: string; refreshToken: string };
 };

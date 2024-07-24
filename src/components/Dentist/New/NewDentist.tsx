@@ -24,15 +24,20 @@ import { ClinicDetail } from "../../../type";
 import { useForm } from "antd/es/form/Form";
 import { useNavigate } from "react-router-dom";
 import { useNotification } from "../../../hooks/notificationHooks/useNotification";
+import { NewDentistDetail } from "../../../services/api/dentistApi";
+import dayjs from "dayjs";
+import routes from "../../../constants/routes";
+import { createDentistApi } from "../../../services/dentist";
 
 interface NewDentistPageProps {}
 
 const NewDentistPage: React.FC<NewDentistPageProps> = () => {
   const [clinicDentals, setClinicDentals] = useState<ClinicDetail[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
   const [form] = useForm();
   const navigate = useNavigate();
-  const { modal } = useNotification();
+  const { modal, message } = useNotification();
   useEffect(() => {
     fetchApis().finally(() => setIsLoading(false));
   }, []);
@@ -76,17 +81,33 @@ const NewDentistPage: React.FC<NewDentistPageProps> = () => {
     );
   }
 
+  function handleSubmit(values: NewDentistDetail): void {
+    setIsCreating(true);
+    values.dob = dayjs(values.dob).format("YYYY-MM-DD");
+    createDentistApi(values)
+      .then((_) => {
+        message.success({ content: "Thông tin nha sĩ đã được tạo" });
+        setTimeout(() => {
+          navigate(routes.ADMINISTRATOR.DENTIST.VIEW);
+        }, 1000);
+      })
+      .catch((e) => {
+        console.error(e);
+        message.error({ content: "Lỗi khi lưu thông tin nha sĩ" });
+        setIsCreating(false);
+      });
+  }
+
   return (
     <>
       <Typography.Title level={1}>Thêm nha sĩ mới</Typography.Title>
       <Form
         form={form}
+        disabled={isCreating}
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 218 }}
         initialValues={defaultNewDentist}
-        onFinish={(value) => {
-          console.log(value);
-        }}
+        onFinish={handleSubmit}
         style={{ width: "100%" }}>
         <Typography.Title level={3}>Cơ bản</Typography.Title>
         <Form.Item
@@ -188,29 +209,14 @@ const NewDentistPage: React.FC<NewDentistPageProps> = () => {
               type: "string",
             },
             {
-              max: 12,
-              min: 10,
-              message: "Số điện thoại phải từ 10-12 số",
+              len: 10,
+              message: "Số điện thoại phải từ 10 số",
             },
           ]}>
           <Input prefix={<PhoneOutlined />} />
         </Form.Item>
         <Form.Item name="dob" label="Ngày sinh">
           <DatePicker />
-        </Form.Item>
-        <Form.Item
-          name="address"
-          label="Địa chỉ"
-          rules={[
-            {
-              required: true,
-              message: "Thông tin bắt buộc",
-            },
-            {
-              type: "string",
-            },
-          ]}>
-          <Input />
         </Form.Item>
         <Form.Item
           label="Giới tính"
@@ -254,7 +260,7 @@ const NewDentistPage: React.FC<NewDentistPageProps> = () => {
               message: "Yêu cầu số",
             },
           ]}>
-          <InputNumber suffix="Năm" defaultValue={1} />
+          <InputNumber suffix="Năm" defaultValue={1} min={1} />
         </Form.Item>
         <Form.Item
           name="licenseNumber"

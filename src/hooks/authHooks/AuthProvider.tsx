@@ -11,9 +11,9 @@ import {
 } from "../../services/auth.ts";
 import axios, { AxiosRequestHeaders } from "axios";
 import { useNotification } from "../notificationHooks/useNotification.tsx";
-import { AUTH_DETAILS, ROLE, ROLE_KEY } from "../../constants/default.ts";
-import { parseJwt } from "../../utils/jwt.ts";
+import { AUTH_DETAILS } from "../../constants/default.ts";
 import { SessionStorage } from "../../utils/sessionStorage.ts";
+import { eraseCookie, getCookie, setCookie } from "../../utils/cookies.ts";
 
 export interface AuthContextInterface {
   authDetails: AuthDetails | null;
@@ -23,7 +23,6 @@ export interface AuthContextInterface {
   getCurrentUser: () => Promise<AuthDetails>;
   isAuthenticated: () => boolean;
   isAuthLoading: boolean;
-  role: ROLE;
   accessToken: string;
 }
 
@@ -35,24 +34,27 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   const [authDetails, setAuthDetails] = useState<AuthDetails | null>(
     SessionStorage.get<AuthDetails>(AUTH_DETAILS)
   );
+  const REFRESH_TOKEN = "RFSHTKN";
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [role, setRole] = useState<ROLE>("GUEST");
   const [accessToken, setAccessToken] = useState("");
   const [injectAuth, setInjectAuth] = useState(-1);
   const { message } = useNotification();
   useEffect(() => {
     const loggedInUser = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
+    const refreshToken = getCookie(REFRESH_TOKEN);
     if (
       !isNil(loggedInUser) &&
       !isEmpty(loggedInUser) &&
-      loggedInUser?.userDetails?.refreshToken
+      !isNil(refreshToken)
     ) {
       setAuthDetails(loggedInUser);
       setTimeout(() => {
-        refreshTokenApi(loggedInUser)
+        refreshTokenApi({
+          refreshToken,
+          userId: loggedInUser.userDetails?.id!,
+        })
           .then((authToken) => {
             setAccessToken(authToken.token);
-            getRole(authToken.token);
             updateRefreshToken(authToken.refreshToken);
           })
           .catch((error) => {
@@ -83,23 +85,8 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
     }
   }, [accessToken, isAuthLoading]);
 
-  const getRole = useCallback(
-    (accessToken: string) => {
-      const role = (
-        parseJwt(accessToken)[ROLE_KEY] as string
-      ).toUpperCase() as ROLE;
-      setRole(role);
-    },
-    [accessToken]
-  );
-
   useEffect(() => {
     if (!isEmpty(accessToken)) {
-      //config roles
-      //FIXME - role should be get from currentUser api
-      getRole(accessToken);
-      //FIXME - end
-
       const injectAuth = axios.interceptors.request.use((config) => ({
         ...config,
         headers: {
@@ -129,8 +116,9 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
 
   const login = useCallback(
     async (user: LoginFormProps) => {
-      const { token } = await loginApi(user);
+      const { token, refreshToken } = await loginApi(user);
       setAccessToken(token);
+      updateRefreshToken(refreshToken);
       return token;
     },
     [loginApi]
@@ -138,10 +126,10 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     await signOutApi();
-    setRole("GUEST");
     setAccessToken("");
     setAuthDetails(null);
     SessionStorage.clear(AUTH_DETAILS);
+    eraseCookie(REFRESH_TOKEN);
     axios.interceptors.request.eject(injectAuth);
     setInjectAuth(-1);
   }, [setAuthDetails]);
@@ -166,19 +154,12 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   );
 
   const updateRefreshToken = (refreshToken: string) => {
-    const authDetails = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
-    if (authDetails?.userDetails?.refreshToken) {
-      authDetails.userDetails.refreshToken = refreshToken;
-      SessionStorage.set(AUTH_DETAILS, authDetails);
-      return;
-    }
-    console.error("Failed to update refreshToken");
+    setCookie(REFRESH_TOKEN, refreshToken, 7);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        role,
         isAuthLoading,
         authDetails,
         getCurrentUser,

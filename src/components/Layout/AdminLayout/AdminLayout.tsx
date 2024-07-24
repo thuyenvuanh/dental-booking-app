@@ -58,10 +58,7 @@ const AdminLayout: React.FC = () => {
   //logic
   const navigatePage = ({ key }: { key: string }): void => {
     const currentPath = window.location.pathname;
-    if (
-      !currentPath.startsWith(key.toLowerCase()) ||
-      currentPath === key.toLowerCase()
-    ) {
+    if (currentPath !== key.toLowerCase()) {
       navigate(key);
     }
   };

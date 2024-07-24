@@ -5,12 +5,17 @@ import {Appointment} from "../../type.ts";
 import React, {useCallback, useState} from "react";
 import {isEmpty} from "lodash";
 import VirtualList from 'rc-virtual-list';
+import utc from "dayjs/plugin/utc"; // ES 2015
+
+import timezone from "dayjs/plugin/timezone"; // ES 2015
 
 interface BookCalendarProps {
-    appointments: Appointment[];
+  appointments: Appointment[];
 }
-
-const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
+const BookCalendar: React.FC<BookCalendarProps> = ({ appointments }) => {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  dayjs.tz.setDefault(dayjs.tz.guess());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [apmts, setApmts] = useState<Appointment[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -68,7 +73,9 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
     if (listData.length != 0)
       return (
         <Alert
-          message={`${listData.length} apmnts${listData.length > 1 ? "s" : ""}`}
+          message={`${listData.length} cuộc hẹn ${
+            listData.length > 1 ? "s" : ""
+          }`}
         />
       );
   };
@@ -104,10 +111,10 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
                         justifyContent: "end",
                       }}>
                       <Typography.Text strong style={{ textAlign: "right" }}>
-                        {dayjs(item.startAt).format("HH:MM")}
+                        {dayjs(`${item.startAt}Z`).format("HH:mm a")}
                       </Typography.Text>
                       <Typography>
-                        {dayjs(item.startAt).format("DD/MM/YYYY")}
+                        {dayjs(`${item.startAt}Z`).format("DD/MM/YYYY")}
                       </Typography>
                     </div>
                   </List.Item>
@@ -120,6 +127,6 @@ const BookCalendar: React.FC<BookCalendarProps> = ({appointments}) => {
       <Calendar cellRender={cellRender} onSelect={showModal} />
     </>
   );
-}
+};
 
 export default BookCalendar;

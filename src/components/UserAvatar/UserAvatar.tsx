@@ -4,20 +4,22 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { Avatar, Dropdown, MenuProps } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/authHooks/useAuth.tsx";
 import routes from "../../constants/routes";
 import { useEffect, useState } from "react";
 import { useNotification } from "../../hooks/notificationHooks/useNotification.tsx";
 
 const UserAvatar = () => {
-  const { logout, role, isAuthLoading } = useAuth();
+  const { logout, isAuthLoading, authDetails } = useAuth();
   const [items, setItems] = useState<MenuProps["items"]>([]);
   const { message } = useNotification();
+  const navigate = useNavigate();
   const logoff: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
     logout().then(() => {
       message.success({ content: "Đăng xuất thành công" });
+      navigate("/");
     });
   };
 
@@ -51,12 +53,13 @@ const UserAvatar = () => {
     if (isAuthLoading) {
       return;
     }
+    const role = authDetails?.userDetails?.rolesName.$values[0];
     switch (role) {
-      case "CUSTOMER":
+      case "Customer":
         console.log("CUSTOMER");
         setItems(customerItems);
         break;
-      case "ADMINISTRATOR":
+      case "Administrator":
         console.log("ADMINISTRATOR");
         setItems(adminItems);
         break;
@@ -64,10 +67,10 @@ const UserAvatar = () => {
         console.error(`Unknown role ${role}`);
         break;
     }
-  }, [role, isAuthLoading]);
+  }, [isAuthLoading]);
 
   return (
-    <Dropdown menu={{ items: items }} placement="bottomRight">
+    <Dropdown menu={{ items }} placement="bottomRight">
       <Avatar style={{ cursor: "pointer" }} />
     </Dropdown>
   );

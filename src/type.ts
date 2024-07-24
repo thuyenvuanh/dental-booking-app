@@ -1,39 +1,22 @@
 import {MenuProps} from "antd";
+import { ROLE } from "./constants/default";
 
 export interface UserDetails {
   $id: string;
-  dob: string;
+  id: string;
   firstName: string;
   lastName: string;
+  email: string;
+  userName: string;
+  rolesName: RolesName;
+  dob: any;
   phoneNumber: string;
-  address: string;
   sex: boolean;
   status: number;
-  avatarUrl: string;
-  isConfirmEmail: boolean;
-  isActive: boolean;
-  createAt: string;
-  updateAt: string;
-  refreshToken: string;
-  dateExpireRefreshToken: string;
-  dentist: Dentist;
-  clinicDentals: ClinicDetail;
-  appointments: Appointment[];
-  appointmentNotifications: AppointmentNotification[];
-  id: string;
-  userName: string;
-  normalizedUserName: string;
-  email: string;
-  normalizedEmail: string;
-  emailConfirmed: boolean;
-  passwordHash: string;
-  securityStamp: string;
-  concurrencyStamp: string;
-  phoneNumberConfirmed: boolean;
-  twoFactorEnabled: boolean;
-  lockoutEnd: string;
-  lockoutEnabled: boolean;
-  accessFailedCount: number;
+}
+export interface RolesName {
+  $id: string;
+  $values: ROLE[];
 }
 
 export interface LocationData {
@@ -72,9 +55,14 @@ export interface Dentist {
   status: number;
   createAt: Date;
   updateAt: Date;
-  clinicDentalId: number;
+  clinicDentalId: string;
   clinicDental: ClinicDetail;
-  appointments: Appointment[];
+  appointments: Appointment[] | DNAppointment;
+}
+
+export interface DNAppointment { 
+  $id: string; 
+  $values: Appointment[];
 }
 
 export interface ClinicDetail {

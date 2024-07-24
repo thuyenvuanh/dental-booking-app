@@ -1,13 +1,6 @@
 import axios from "axios";
 import { Dentist } from "../type";
-
-//interfaces
-export interface CreateDentist {
-  description: string;
-  licenseNumber: string;
-  yearOfExperience: number;
-  clinicDentalId: string;
-}
+import { NewDentistDetail } from "./api/dentistApi";
 
 export const listDentistsApi = async (): Promise<Dentist[]> => {
   const response = await axios.get("/Dentists");
@@ -15,7 +8,7 @@ export const listDentistsApi = async (): Promise<Dentist[]> => {
 };
 
 export const createDentistApi = async (
-  data: CreateDentist
+  data: NewDentistDetail
 ): Promise<Dentist> => {
   const response = await axios.post("/Dentists", data);
   return response.data;

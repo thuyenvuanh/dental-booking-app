@@ -1,9 +1,9 @@
-import {Layout, Menu, theme} from "antd";
-import {Link, Outlet, useLocation, useNavigate} from "react-router-dom";
+import { Layout, Menu, Spin, theme } from "antd";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import UserAvatar from "../../UserAvatar/UserAvatar";
-import {useAuth} from "../../../hooks/authHooks/useAuth.tsx";
+import { useAuth } from "../../../hooks/authHooks/useAuth.tsx";
 import AuthButtons from "../AuthButton/AuthButtons";
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 import routes from "../../../constants/routes";
 import { LocationData } from "../../../type.ts";
 import { userLayoutItems } from "../../../constants/userMenu";
@@ -12,7 +12,7 @@ import { BgGrey } from "./UserLayout.style";
 const { Header, Content, Sider } = Layout;
 
 const UserLayout: React.FC = () => {
-  const { isAuthenticated, role, isAuthLoading } = useAuth();
+  const { isAuthenticated, authDetails, isAuthLoading } = useAuth();
   const location = useLocation();
   const getCurrentKey = () => {
     const item = userLayoutItems.find((s) =>
@@ -31,13 +31,14 @@ const UserLayout: React.FC = () => {
 
   useEffect(() => {
     //log off listener
-    if (!isAuthenticated()) {
+    if (!isAuthenticated() && !isAuthLoading) {
       navigate(routes.GUEST.HOME);
-      if (role != "CUSTOMER") {
-        navigate(routes[role].HOME);
+      const userRole = authDetails!.userDetails!.rolesName.$values[0]!;
+      if (userRole != "Customer") {
+        navigate(routes.GUEST.HOME);
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isAuthLoading]);
 
   const navigatePage = ({ key }: { key: string }): void => {
     const currentPath = window.location.pathname;
@@ -50,7 +51,7 @@ const UserLayout: React.FC = () => {
   };
 
   const checkAuth = useCallback(() => {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated() && !isAuthLoading) {
       navigate(routes.LOGIN, {
         replace: true,
         state: {
@@ -60,7 +61,11 @@ const UserLayout: React.FC = () => {
         } as LocationData,
       });
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isAuthLoading]);
+
+  if (isAuthLoading) {
+    return <Spin fullscreen tip="Loading, please wait" />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }}>

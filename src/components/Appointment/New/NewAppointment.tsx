@@ -6,18 +6,7 @@ import NewAppointmentProvider, {
 } from "../../../hooks/appointmentHooks/NewAppointment";
 import FormByDentist from "./FormByDentist";
 import FormBySpecDate from "./FormBySpecDate";
-
-const steps = [
-  {
-    title: "Hình thức đặt lịch",
-  },
-  {
-    title: "Điền thông tin",
-  },
-  {
-    title: "Thành công",
-  },
-];
+import Success from "./Success";
 
 const NewAppointment: React.FC = () => {
   return (
@@ -29,7 +18,7 @@ const NewAppointment: React.FC = () => {
 };
 
 const ContextLayer = () => {
-  const { currentStep, apmtType, handleBack, nextStep } =
+  const { currentStep, apmtType, handleBack, nextStep, steps } =
     useNewAppointmentContext();
 
   return (
@@ -40,16 +29,22 @@ const ContextLayer = () => {
           flexDirection: "row",
           justifyContent: "stretch",
         }}>
-        <Button onClick={handleBack} icon={<LeftOutlined />}>
-          Trở về
-        </Button>
+        {currentStep < 3 && (
+          <Button onClick={handleBack} icon={<LeftOutlined />}>
+            Trở về
+          </Button>
+        )}
         <div style={{ width: "12px" }}></div>
         <Steps current={currentStep} items={steps} />
       </div>
       {currentStep == 0 && <AppointmentOptions nextStep={nextStep} />}
-      {currentStep == 1 && apmtType == "byDentist" && <FormByDentist />}
-      {currentStep == 1 && apmtType == "bySpecificDate" && <FormBySpecDate />}
-      {currentStep == 2 && <>Success</>}
+      {[1, 2].includes(currentStep) && apmtType == "byDentist" && (
+        <FormByDentist />
+      )}
+      {[1, 2].includes(currentStep) && apmtType == "bySpecificDate" && (
+        <FormBySpecDate />
+      )}
+      {currentStep == 3 && <Success />}
     </>
   );
 };
