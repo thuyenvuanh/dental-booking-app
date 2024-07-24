@@ -4,6 +4,7 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Space,
   TimePicker,
   Typography,
@@ -16,13 +17,15 @@ import { omit } from "lodash";
 import { createNewClinicApi } from "../../../services/clinic";
 import { useAuth } from "../../../hooks/authHooks/useAuth";
 import dayjs from "dayjs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import routes from "../../../constants/routes";
 
 interface NewClinicPageProps {}
 
 const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
   const { authDetails } = useAuth();
   const { modal } = useNotification();
 
@@ -62,6 +65,7 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
   };
 
   async function handleSubmit(values: typeof defaultNewClinic): Promise<void> {
+    setIsFormDisabled(true);
     let data = {
       ...values,
       openTime: dayjs(values.openCloseTime[0]).format("HH:mm"),
@@ -70,7 +74,18 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
       onwerId: authDetails?.userDetails?.id,
     } as ClinicDetail;
     data = omit(data, "openCloseTime");
-    createNewClinicApi(data);
+    createNewClinicApi(data)
+      .then(() => {
+        message.success({ content: "Thông tin đã được lưu" });
+        setTimeout(() => {
+          navigate(routes.ADMINISTRATOR.CLINIC.VIEW);
+        }, 500);
+      })
+      .catch((e) => {
+        console.error(e);
+        message.error({ content: "Lỗi khi lưu thông tin" });
+      })
+      .finally(() => setIsFormDisabled(false));
   }
 
   return (
@@ -83,6 +98,7 @@ const NewClinicPage: React.FC<NewClinicPageProps> = (_) => {
         labelWrap
         initialValues={defaultNewClinic}
         onFinish={handleSubmit}
+        disabled={isFormDisabled}
         style={{ width: "100%" }}>
         <Form.Item
           name="name"
