@@ -38,7 +38,7 @@ const DentistAppointment: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedStatus, setSelectedStatus] = useState(appointmentStatus[6]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [profiles, setProfiles] = useState<any[]>([]);
   const { message } = useNotification();
 
