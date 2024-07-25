@@ -63,7 +63,7 @@ const DentistLayout: React.FC = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isAuthLoading) {
     return <Spin fullscreen spinning />;
   }
 
