@@ -60,10 +60,15 @@ const DentistAppointment: React.FC = () => {
   }
 
   useEffect(() => {
-    getAppointments();
-    getProfileApi()
-      .then(({ $values }) => {
-        setProfiles($values);
+    const dentistAppointmentPromise = dentistAppointmentApi({
+      dateTime: selectedDate.format("YYYY-MM-DD"),
+      status: appointmentStatus.indexOf(selectedStatus),
+      dentistId: authDetails?.userDetails?.dentist?.id!,
+    });
+    Promise.all([dentistAppointmentPromise, getProfileApi()])
+      .then((response) => {
+        setAppointments(response[0].$values);
+        setProfiles(response[1].$values);
       })
       .catch((e) => {
         console.error(e);
@@ -87,12 +92,12 @@ const DentistAppointment: React.FC = () => {
   return (
     <>
       <Row justify="space-between" align="middle">
-        <Col span={20}>
+        <Col span={18}>
           <Typography.Title level={3}>Lịch hẹn hôm nay</Typography.Title>
         </Col>
         <Col>
-          <Button size="large" type="primary" onClick={newApmts}>
-            Đặt lịch khám
+          <Button size="large" type="primary" onClick={newApmts} disabled>
+            Đặt lịch khám (WIP)
           </Button>
         </Col>
       </Row>
@@ -138,9 +143,9 @@ const DentistAppointment: React.FC = () => {
                     {(appointment: Appointment) => (
                       <List.Item key={appointment.id}>
                         <List.Item.Meta
-                          title={`${getProfile(appointment).firstName} ${
-                            getProfile(appointment).lastName
-                          }`}
+                          title={`Bệnh nhân: ${
+                            getProfile(appointment).firstName
+                          } ${getProfile(appointment).lastName}`}
                           description={
                             <>
                               <span>
