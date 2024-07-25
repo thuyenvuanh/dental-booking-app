@@ -20,6 +20,8 @@ import EditDentistPage from "./components/Dentist/Edit/EditDentist.tsx";
 import ClinicViewPage from "./components/Clinic/Clinic.tsx";
 import NewClinicPage from "./components/Clinic/New/NewClinic.tsx";
 import EditClinicPage from "./components/Clinic/Edit/EditClinic.tsx";
+import DentistLayout from "./components/Layout/DentistLayout/DentistLayout.tsx";
+import DentistAppointment from "./components/Appointment/View/DentistAppointment.tsx";
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -77,6 +79,12 @@ const App: React.FC = () => {
                   <Route
                     path={routes.ADMINISTRATOR.CLINIC.EDIT}
                     Component={EditClinicPage}
+                  />
+                </Route>
+                <Route Component={DentistLayout}>
+                  <Route
+                    path={routes.DENTIST.APPOINTMENT.VIEW}
+                    Component={DentistAppointment}
                   />
                 </Route>
                 <Route path="*" element={<>404 Not Found</>} />

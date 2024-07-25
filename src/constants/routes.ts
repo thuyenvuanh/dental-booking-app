@@ -23,6 +23,13 @@ const routes = {
       EDIT: "/clinic/edit",
     },
   },
+  DENTIST: {
+    HOME: "/appointments",
+    APPOINTMENT: {
+      VIEW: "/appointments",
+      CREATE: "/appointments/create",
+    },
+  },
 };
 
 export const BASENAME = "/dental-booking-app";

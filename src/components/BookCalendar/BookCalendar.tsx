@@ -1,13 +1,24 @@
-import {Alert, Calendar, CalendarProps, List, Modal, Typography} from "antd";
-import type {Dayjs} from 'dayjs';
-import dayjs from 'dayjs';
-import {Appointment} from "../../type.ts";
-import React, {useCallback, useState} from "react";
-import {isEmpty} from "lodash";
-import VirtualList from 'rc-virtual-list';
+import {
+  Alert,
+  Calendar,
+  CalendarProps,
+  List,
+  Modal,
+  Spin,
+  Typography,
+} from "antd";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { Appointment, ClinicDetail, Dentist } from "../../type.ts";
+import React, { useCallback, useEffect, useState } from "react";
+import { isEmpty } from "lodash";
+import VirtualList from "rc-virtual-list";
 import utc from "dayjs/plugin/utc"; // ES 2015
 
 import timezone from "dayjs/plugin/timezone"; // ES 2015
+import { listDentistsApi } from "../../services/dentist.ts";
+import { useNotification } from "../../hooks/notificationHooks/useNotification.tsx";
+import { listClinicDentalApi } from "../../services/clinicDental.ts";
 
 interface BookCalendarProps {
   appointments: Appointment[];
@@ -71,13 +82,7 @@ const BookCalendar: React.FC<BookCalendarProps> = ({ appointments }) => {
   const dateCellRender = (value: Dayjs) => {
     const listData = getEventOfDay(value);
     if (listData.length != 0)
-      return (
-        <Alert
-          message={`${listData.length} cuộc hẹn ${
-            listData.length > 1 ? "s" : ""
-          }`}
-        />
-      );
+      return <Alert message={`${listData.length} cuộc hẹn`} />;
   };
 
   const cellRender: CalendarProps<Dayjs>["cellRender"] = (current, info) => {
@@ -87,45 +92,90 @@ const BookCalendar: React.FC<BookCalendarProps> = ({ appointments }) => {
   };
   return (
     <>
-      <Modal
-        open={isModalOpen}
-        title="Appointments"
-        okText="Close"
-        onOk={handleCancel}
-        footer={null}
-        onCancel={handleCancel}
-        maskClosable={true}>
-        {!isEmpty(apmts) && (
-          <List>
-            <VirtualList data={apmts} itemKey={"appointments"}>
-              {(item: Appointment) => (
-                <>
-                  <List.Item key={item.id}>
-                    <List.Item.Meta
-                      title={item.dentistId}
-                      description={item.clinicId}></List.Item.Meta>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "end",
-                      }}>
-                      <Typography.Text strong style={{ textAlign: "right" }}>
-                        {dayjs(`${item.startAt}Z`).format("HH:mm a")}
-                      </Typography.Text>
-                      <Typography>
-                        {dayjs(`${item.startAt}Z`).format("DD/MM/YYYY")}
-                      </Typography>
-                    </div>
-                  </List.Item>
-                </>
-              )}
-            </VirtualList>
-          </List>
-        )}
-      </Modal>
+      <MeetingModal
+        isModalOpen={isModalOpen}
+        apmts={apmts}
+        handleCancel={handleCancel}
+      />
       <Calendar cellRender={cellRender} onSelect={showModal} />
     </>
+  );
+};
+
+interface MeetingModalProps {
+  isModalOpen: boolean;
+  handleCancel: () => void;
+  apmts: Appointment[];
+}
+
+const MeetingModal: React.FC<MeetingModalProps> = ({
+  isModalOpen,
+  handleCancel,
+  apmts,
+}) => {
+  const [isModalLoading, setIsModalLoading] = useState(true);
+  const [dentists, setDentists] = useState<Dentist[]>([]);
+  const [clinicDentals, setClinicDentals] = useState<ClinicDetail[]>([]);
+  const { message } = useNotification();
+
+  useEffect(() => {
+    Promise.all([listClinicDentalApi(), listDentistsApi()])
+      .then((values) => {
+        setClinicDentals(values[0]);
+        setDentists(values[1]);
+      })
+      .catch((e) => {
+        console.error(e);
+        message.error({ content: "Lỗi lấy thông tin. Vui lòng thử lại sau" });
+      })
+      .finally(() => setIsModalLoading(false));
+  }, []);
+
+  return (
+    <Modal
+      open={isModalOpen}
+      title="Lịch hẹn"
+      okText="Đóng"
+      onOk={handleCancel}
+      footer={null}
+      onCancel={handleCancel}
+      maskClosable={true}>
+      {isModalLoading && <Spin tip="Đang tải, vui lòng chờ" />}
+      {!isEmpty(apmts) && !isModalLoading && (
+        <List>
+          <VirtualList data={apmts} itemKey={"appointments"}>
+            {(item: Appointment) => (
+              <>
+                <List.Item key={item.id}>
+                  <List.Item.Meta
+                    title={
+                      `Nha sĩ: ` +
+                      dentists.find((x) => x.id === item.dentistId)?.description
+                    }
+                    description={
+                      `Phòng khám: ` +
+                      clinicDentals.find((x) => x.id === item.clinicId)?.name
+                    }></List.Item.Meta>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "end",
+                    }}>
+                    <Typography.Text strong style={{ textAlign: "right" }}>
+                      {dayjs(`${item.startAt}Z`).format("HH:mm a")}
+                    </Typography.Text>
+                    <Typography>
+                      {dayjs(`${item.startAt}Z`).format("DD/MM/YYYY")}
+                    </Typography>
+                  </div>
+                </List.Item>
+              </>
+            )}
+          </VirtualList>
+        </List>
+      )}
+    </Modal>
   );
 };
 

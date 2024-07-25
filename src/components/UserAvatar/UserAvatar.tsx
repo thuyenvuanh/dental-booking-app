@@ -49,6 +49,19 @@ const UserAvatar = () => {
     },
   ];
 
+  const dentistItems: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <Link to={routes.DENTIST.HOME}>Lịch khám</Link>,
+      icon: <CalendarOutlined />,
+    },
+    {
+      key: "2",
+      label: <a onClick={logoff}>Đăng xuất</a>,
+      icon: <LogoutOutlined />,
+    },
+  ];
+
   useEffect(() => {
     if (isAuthLoading) {
       return;
@@ -62,6 +75,9 @@ const UserAvatar = () => {
       case "Administrator":
         console.log("ADMINISTRATOR");
         setItems(adminItems);
+        break;
+      case "Dentist":
+        setItems(dentistItems);
         break;
       default:
         console.error(`Unknown role ${role}`);

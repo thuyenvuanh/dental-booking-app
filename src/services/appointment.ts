@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Appointment } from "../type";
 import { NewAppointment } from "./api/appointment";
+import { isNil } from "lodash";
 
 export const listAppointmentApi = async (
   userId: string
@@ -28,6 +29,31 @@ export const appointmentsByUserIdApi = async (
 };
 
 export const createAppointmentApi = async (data: NewAppointment) => {
-  const response = await axios.post("/appointment/create", data);
+  const response = await axios.post("/dentist/registerAppointment", data);
   return response.data as Appointment;
+};
+
+export const getAppointmentsByDate = async (params: { datetime: string }) => {
+  const response = await axios.get("/admin/getAllAppointmentByDate", {
+    params,
+  });
+  return response.data as {
+    $id: string;
+    $values: Appointment[];
+  };
+};
+
+export const dentistAppointmentApi = async (params?: {
+  dateTime?: string;
+  status?: number;
+  dentistId: string;
+}) => {
+  const response = await axios.get(
+    `/appointment/getAllDentistAppointmentByDate`,
+    !isNil(params) ? { params } : {}
+  );
+  return response.data as {
+    $id: string;
+    $values: Appointment[];
+  };
 };

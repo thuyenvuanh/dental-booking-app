@@ -1,4 +1,4 @@
-import {MenuProps} from "antd";
+import { MenuProps } from "antd";
 import { ROLE } from "./constants/default";
 
 export interface UserDetails {
@@ -9,6 +9,7 @@ export interface UserDetails {
   email: string;
   userName: string;
   rolesName: RolesName;
+  dentist?: Dentist;
   dob: any;
   phoneNumber: string;
   sex: boolean;
@@ -60,8 +61,8 @@ export interface Dentist {
   appointments: Appointment[] | DNAppointment;
 }
 
-export interface DNAppointment { 
-  $id: string; 
+export interface DNAppointment {
+  $id: string;
   $values: Appointment[];
 }
 
@@ -84,49 +85,48 @@ export interface ClinicDetail {
 }
 
 export interface AppointmentNotification {
-    id: string;
-    sendAt: Date;
-    message: string;
-    createAt: Date;
-    sendToId: string;
-    user: ApplicationUser;
+  id: string;
+  sendAt: Date;
+  message: string;
+  createAt: Date;
+  sendToId: string;
+  user: ApplicationUser;
 }
 
 export interface Appointment {
-  id: string
-  clinicId: string
-  customerId: string
-  dentistId: string
-  startAt: string
-  endAt: string
-  type: string
-  periodicInterval: number
-  status: number
-  note: string
-  createAt: string
-  updateAt: string
+  id: string;
+  clinicId: string;
+  customerId: string;
+  dentistId: string;
+  startAt: string;
+  endAt: string;
+  type: string;
+  periodicInterval: number;
+  status: number;
+  note: string;
+  createAt: string;
+  updateAt: string;
 }
 
-
 export interface ApplicationUser {
-    dob: Date;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    address: string;
-    sex: boolean;
-    status: number;
-    avatarUrl: string;
-    isConfirmEmail: boolean;
-    isActive: boolean;
-    createAt: Date;
-    updateAt: Date;
-    refreshToken: string;
-    dateExpireRefreshToken: Date;
-    dentist: Dentist,
-    clinicDentals: ClinicDetail[];
-    appointments: Appointment[];
-    appointmentNotifications: AppointmentNotification[];
+  dob: Date;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  address: string;
+  sex: boolean;
+  status: number;
+  avatarUrl: string;
+  isConfirmEmail: boolean;
+  isActive: boolean;
+  createAt: Date;
+  updateAt: Date;
+  refreshToken: string;
+  dateExpireRefreshToken: Date;
+  dentist: Dentist;
+  clinicDentals: ClinicDetail[];
+  appointments: Appointment[];
+  appointmentNotifications: AppointmentNotification[];
 }
 
 export interface SignUpForm {

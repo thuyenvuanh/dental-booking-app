@@ -65,7 +65,7 @@ export const defaultNewAppointment: NewAppointment = {
 export const ROLE_KEY =
   "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
 
-export type ROLE = "Guest" | "Customer" | "Administrator";
+export type ROLE = "Guest" | "Customer" | "Administrator" | "Dentist";
 
 export const defaultSteps = [
   {

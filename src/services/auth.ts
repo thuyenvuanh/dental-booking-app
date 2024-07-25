@@ -32,3 +32,11 @@ export const signOutApi = async () => {
   const response = await axios.delete("/auth/signOut");
   return response.data;
 };
+
+export const getProfileApi = async () => {
+  const response = await axios.get("/profile");
+  return response.data as {
+    $id: string;
+    $values: any[];
+  };
+};

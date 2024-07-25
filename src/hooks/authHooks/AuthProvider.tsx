@@ -105,7 +105,7 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   }, [accessToken]);
 
   const getCurrentUser = useCallback(async () => {
-    const { result } = await currentUserApi();
+    const result = await currentUserApi();
     const authDetails = {
       userDetails: result,
     } as AuthDetails;
@@ -132,7 +132,7 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
     eraseCookie(REFRESH_TOKEN);
     axios.interceptors.request.eject(injectAuth);
     setInjectAuth(-1);
-  }, [setAuthDetails]);
+  }, [setAuthDetails, setAccessToken, setInjectAuth, injectAuth, signOutApi]);
 
   const signUp = useCallback(
     async (signUpForm: SignUpForm) => {

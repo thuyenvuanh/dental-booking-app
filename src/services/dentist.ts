@@ -3,13 +3,13 @@ import { Dentist } from "../type";
 import { NewDentistDetail } from "./api/dentistApi";
 
 export const listDentistsApi = async (): Promise<Dentist[]> => {
-  const response = await axios.get("/Dentists");
+  const response = await axios.get("/dentist");
   return response.data as Dentist[];
 };
 
 export const createDentistApi = async (
   data: NewDentistDetail
 ): Promise<Dentist> => {
-  const response = await axios.post("/Dentists", data);
+  const response = await axios.post("/dentist", data);
   return response.data;
 };

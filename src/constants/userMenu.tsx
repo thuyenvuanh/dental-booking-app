@@ -27,3 +27,11 @@ export const adminLayoutItems: MenuItem[] = [
     label: "Phòng khám",
   },
 ];
+
+export const dentistLayoutItem: MenuItem[] = [
+  {
+    key: "/appointments",
+    icon: <CalendarOutlined />,
+    label: "Lịch hẹn",
+  },
+];
