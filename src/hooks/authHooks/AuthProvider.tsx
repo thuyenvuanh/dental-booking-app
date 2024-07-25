@@ -39,6 +39,13 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
   const [accessToken, setAccessToken] = useState("");
   const [injectAuth, setInjectAuth] = useState(-1);
   const { message } = useNotification();
+
+  useEffect(() => {
+    if (!isEmpty(accessToken) && !isNil(authDetails) && injectAuth != -1) {
+      setIsAuthLoading(false);
+    }
+  }, [accessToken, authDetails, injectAuth]);
+
   useEffect(() => {
     const loggedInUser = SessionStorage.get<AuthDetails>(AUTH_DETAILS);
     const refreshToken = getCookie(REFRESH_TOKEN);
@@ -110,7 +117,6 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
     } as AuthDetails;
     setAuthDetails(authDetails);
     SessionStorage.set(AUTH_DETAILS, authDetails);
-    setIsAuthLoading(false);
     return authDetails;
   }, [accessToken, currentUserApi]);
 
