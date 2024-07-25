@@ -70,6 +70,7 @@ const AuthProvider: React.FC<HookProps> = ({ children }) => {
             message.warning({
               content: "Đã hết thời gian chờ phiên. Vui lòng đăng nhập lại",
             });
+            setIsAuthLoading(false);
           });
       }, 500);
       return;

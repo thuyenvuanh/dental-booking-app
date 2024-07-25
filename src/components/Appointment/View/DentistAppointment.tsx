@@ -74,7 +74,11 @@ const DentistAppointment: React.FC = () => {
         console.error(e);
         message.error({ content: "Lỗi khi lấy thông tin lịch khám" });
       })
-      .finally(() => setIsLoading(false));
+      .finally(() =>
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500)
+      );
   }, []);
 
   useEffect(() => {
@@ -144,8 +148,8 @@ const DentistAppointment: React.FC = () => {
                       <List.Item key={appointment.id}>
                         <List.Item.Meta
                           title={`Bệnh nhân: ${
-                            getProfile(appointment).firstName
-                          } ${getProfile(appointment).lastName}`}
+                            getProfile(appointment)?.firstName
+                          } ${getProfile(appointment)?.lastName}`}
                           description={
                             <>
                               <span>
